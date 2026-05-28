@@ -1,4 +1,5 @@
 #include <iostream>
+#include <filesystem>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <stb/stb_image.h>
@@ -8,15 +9,18 @@
 #include "VAO.h"
 #include "EBO.h"
 
+#include "Texture.h"
+
 int main(void)
 {
+
 	GLfloat vertices[] =
 	{
 		//			     Coordinates			   /		Colors			//
-		-0.5f, -0.5f, 0.0f,								1.0f, 0.0f, 0.0f,
-		-0.5f, 0.5f, 0.0f,								0.0f, 1.0f, 0.0f,
-		0.5f, 0.5f, 0.0f,								0.0f, 0.0f, 1.0f,
-		0.5f, -0.5f, 0.0f,								1.0f, 1.0f, 0.0f
+		-0.5f, -0.5f, 0.0f,								1.0f, 0.0f, 0.0f,		0.0f, 0.0f,
+		-0.5f, 0.5f, 0.0f,								0.0f, 1.0f, 0.0f,		0.0f, 1.0f,
+		0.5f, 0.5f, 0.0f,								0.0f, 0.0f, 1.0f,		1.0f, 1.0f,
+		0.5f, -0.5f, 0.0f,								1.0f, 1.0f, 0.0f,		1.0f, 0.0f
 	};
 
 	GLfloat triforce_vertices[] =
@@ -63,7 +67,11 @@ int main(void)
 	}
 	glfwMakeContextCurrent(window);
 
-	gladLoadGL();
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+	{
+		std::cout << "Failed to initialize GLAD" << std::endl;
+		return -1;
+	}
 	glViewport(0, 0, 800, 800);
 
 	// Create Shader Program
@@ -78,8 +86,9 @@ int main(void)
 	EBO EBO1(indices, sizeof(indices));
 
 	// Link the VBO to the VAO and unbind all three
-	VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 6 * sizeof(float), (void*)0);
-	VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0);
+	VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	VAO1.LinkAttrib(VBO1, 2, 2, GL_FLOAT, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 
 	VAO1.Unbind();
 	VBO1.Unbind();
@@ -87,6 +96,10 @@ int main(void)
 
 
 	GLuint uniID = glGetUniformLocation(shaderProgram.id, "scale");
+
+	// Texture
+	Texture lyonel("lyonel.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGB, GL_UNSIGNED_BYTE);
+	lyonel.texUnit(shaderProgram, "tex0", 0);
 
 	// Color default
 	glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
@@ -102,6 +115,8 @@ int main(void)
 
 		// Uniform "scale"
 		glUniform1f(uniID, 1.0f);
+		lyonel.Bind();
+
 		VAO1.Bind();
 
 
@@ -116,6 +131,7 @@ int main(void)
 	VAO1.Delete();
 	VBO1.Delete();
 	EBO1.Delete();
+	lyonel.Delete();
 	shaderProgram.Delete();
 
 	// Termination
