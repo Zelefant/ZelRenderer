@@ -1,6 +1,7 @@
 #include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <stb/stb_image.h>
 
 #include "ShaderClass.h"
 #include "VBO.h"
@@ -11,16 +12,32 @@ int main(void)
 {
 	GLfloat vertices[] =
 	{
-		-0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,
-		0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,
-		0.0f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f,
+		//			     Coordinates			   /		Colors			//
+		-0.5f, -0.5f, 0.0f,								1.0f, 0.0f, 0.0f,
+		-0.5f, 0.5f, 0.0f,								0.0f, 1.0f, 0.0f,
+		0.5f, 0.5f, 0.0f,								0.0f, 0.0f, 1.0f,
+		0.5f, -0.5f, 0.0f,								1.0f, 1.0f, 0.0f
+	};
 
-		-0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f,
-		0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f,
-		0.0f, -0.5f * float(sqrt(3)) / 3, 0.0f
+	GLfloat triforce_vertices[] =
+	{
+		//			     Coordinates			   /		Colors			//
+		-0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,		0.4f, 0.0f, 0.3f,
+		0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,			0.1f, 0.6f, 0.3f,
+		0.0f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f,		1.0f, 0.2f, 0.3f,
+
+		-0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f,		0.5f, 0.8f, 0.3f,
+		0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f,		0.1f, 0.3f, 0.3f,
+		0.0f, -0.5f * float(sqrt(3)) / 3, 0.0f,			0.0f, 0.8f, 0.3f
 	};
 
 	GLuint indices[] =
+	{
+		0, 2, 1,
+		0, 3, 2
+	};
+
+	GLuint triforce_indices[] =
 	{
 		0, 3, 5,
 		3, 2, 4,
@@ -61,10 +78,15 @@ int main(void)
 	EBO EBO1(indices, sizeof(indices));
 
 	// Link the VBO to the VAO and unbind all three
-	VAO1.LinkVBO(VBO1, 0);
+	VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 6 * sizeof(float), (void*)0);
+	VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+
 	VAO1.Unbind();
 	VBO1.Unbind();
 	EBO1.Unbind();
+
+
+	GLuint uniID = glGetUniformLocation(shaderProgram.id, "scale");
 
 	// Color default
 	glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
@@ -77,10 +99,13 @@ int main(void)
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		shaderProgram.Activate();
+
+		// Uniform "scale"
+		glUniform1f(uniID, 1.0f);
 		VAO1.Bind();
 
 
-		glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 
 		glfwSwapBuffers(window);
