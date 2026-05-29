@@ -1,0 +1,4 @@
+#ifndef LIGHTSOURCE_CLASS_H
+#define LIGHTSOURCE_CLASS_H
+
+#endif

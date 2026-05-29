@@ -8,15 +8,24 @@ Camera::Camera(int width, int height, glm::vec3 position)
 	Position = position;
 }
 
-void Camera::Matrix(float FOVdeg, float nearPlane, float farPlane, Shader& shader, const char* uniform)
+void Camera::UpdateMatrix(float FOVdeg, float nearPlane, float farPlane)
 {
+	// Creates the view and projection matrices
 	glm::mat4 view = glm::mat4(1.0f);
 	glm::mat4 proj = glm::mat4(1.0f);
 
+	// Provides them with the intended orientation and position as well as perspective details
 	view = glm::lookAt(Position, Position + Orientation, Up);
 	proj = glm::perspective(glm::radians(FOVdeg), (float)(width / height), nearPlane, farPlane);
 
-	glUniformMatrix4fv(glGetUniformLocation(shader.id, uniform), 1, GL_FALSE, glm::value_ptr(proj * view));
+	// Assign to cam matrix property
+	this->CamMatrix = proj * view;
+}
+
+void Camera::Matrix(Shader& shader, const char* uniform)
+{
+	// Exports camera matrix
+	glUniformMatrix4fv(glGetUniformLocation(shader.id, uniform), 1, GL_FALSE, glm::value_ptr(CamMatrix));
 }
 
 void Camera::Inputs(GLFWwindow* window, float* deltaTime)
@@ -59,6 +68,10 @@ void Camera::Inputs(GLFWwindow* window, float* deltaTime)
 	else if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE)
 	{
 		speed = 0.4f;
+	}
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+	{
+		glfwSetWindowShouldClose(window, true);
 	}
 
 
