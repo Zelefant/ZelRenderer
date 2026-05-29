@@ -52,6 +52,9 @@ Makefile
 install_manifest.txt
 compile_commands.json
 
+# VS files
+.vs/
+
 # Temporary files
 *.tmp
 *.log

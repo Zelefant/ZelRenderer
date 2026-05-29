@@ -6,11 +6,16 @@ layout (location = 2) in vec2 aTex;
 out vec3 color;
 out vec2 texCoord;
 
-uniform float scale;
+uniform mat4 camMatrix;
 
 void main()
 {
-   gl_Position = vec4(aPos.x * scale, aPos.y * scale, aPos.z * scale, 1.0);
+   // Position
+   gl_Position = camMatrix * vec4(aPos, 1.0);
+
+   // Color from the vertex data
    color = aColor;
+
+   // Texture coordinates from vertex data
    texCoord = aTex;
 }

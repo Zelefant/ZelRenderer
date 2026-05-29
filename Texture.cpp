@@ -39,7 +39,7 @@ Texture::Texture(const char* image, GLenum texType, GLenum slot, GLenum format, 
 }
 
 // Modify a texture uniform
-void Texture::texUnit(Shader shader, const char* uniform, GLuint unit)
+void Texture::texUnit(Shader& shader, const char* uniform, GLuint unit)
 {
 	GLuint texUni = glGetUniformLocation(shader.id, uniform);
 	shader.Activate();
