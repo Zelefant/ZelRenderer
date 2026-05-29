@@ -55,32 +55,42 @@ int main(void)
 		 0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	 0.5f, 1.0f,      0.0f, 0.5f,  0.8f  // Facing side
 	};
 
-	GLfloat light_vertices[] =
+	GLfloat plane_vertices[] =
 	{
+		//     COORDINATES     /        COLORS          /    TexCoord   /        NORMALS       //
+		-0.5f, 0.0f, -0.5f,		0.83f, 0.70f, 0.44f,	 0.0f, 0.0f,		0.0f, 1.0f, 0.0f,
+		-0.5f, 0.0f, 0.5f,		0.83f, 0.70f, 0.44f,	 0.0f, 1.0f,		0.0f, 1.0f, 0.0f,
+		0.5f, 0.0f, 0.5f,		0.83f, 0.70f, 0.44f,	 1.0f, 1.0f,		0.0f, 1.0f, 0.0f,
+		0.5f, 0.0f, -0.5f,		0.83f, 0.70f, 0.44f,	 1.0f, 0.0f,		0.0f, 1.0f, 0.0f,
+	};
+
+
+	GLfloat light_vertices[] =
+	{ //     COORDINATES     //
+		-0.1f, -0.1f,  0.1f,
 		-0.1f, -0.1f, -0.1f,
-		-0.1f, 0.0f, -0.1f,
-		-0.1f, 0.0f, 0.0f,
-		0.0f, 0.0f, 0.0f,
-		0.0f, -0.1f, 0.0f,
-		0.0f, -0.1f, -0.1f,
-		0.0f, 0.0f, -0.1f,
-		-0.1f, -0.1f, 0.0f,
+		 0.1f, -0.1f, -0.1f,
+		 0.1f, -0.1f,  0.1f,
+		-0.1f,  0.1f,  0.1f,
+		-0.1f,  0.1f, -0.1f,
+		 0.1f,  0.1f, -0.1f,
+		 0.1f,  0.1f,  0.1f
 	};
 
 	GLuint light_indices[] =
 	{
-		0, 7, 4,
-		0, 5, 4,
-		0, 1, 7,
-		1, 2, 7,
-		1, 6, 2,
-		1, 0, 5,
-		1, 6, 5,
-		2, 3, 6,
-		2, 7, 4,
-		2, 3, 4,
-		6, 5, 4,
-		6, 3, 4,
+		0, 1, 2,
+		0, 2, 3,
+		0, 4, 7,
+		0, 7, 3,
+		3, 7, 6,
+		3, 6, 2,
+		2, 6, 5,
+		2, 5, 1,
+		1, 5, 4,
+		1, 4, 0,
+		4, 5, 6,
+		4, 6, 7
 	};
 
 	GLfloat square_vertices[] =
@@ -104,7 +114,13 @@ int main(void)
 		0.0f, -0.5f * float(sqrt(3)) / 3, 0.0f,			0.0f, 0.8f, 0.3f
 	};
 
-	GLuint indices[] =
+	GLuint plane_indices[] =
+	{
+		0, 1, 2,
+		3, 0, 2,
+	};
+
+	GLuint pyramid_indices[] =
 	{
 		0, 1, 2, // Bottom side
 		0, 2, 3, // Bottom side
@@ -163,8 +179,8 @@ int main(void)
 	VAO1.Bind();
 
 	// Create the VBO and EBO and bind it
-	VBO VBO1(normalized_pyramid_vertices, sizeof(normalized_pyramid_vertices));
-	EBO EBO1(indices, sizeof(indices));
+	VBO VBO1(plane_vertices, sizeof(plane_vertices));
+	EBO EBO1(plane_indices, sizeof(plane_indices));
 
 	// Link the VBO to the VAO and unbind all three
 	VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 11 * sizeof(float), (void*)0);
@@ -177,9 +193,12 @@ int main(void)
 	EBO1.Unbind();
 
 	// Texture
-	Texture lyonel("lyonel.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGB, GL_UNSIGNED_BYTE);
-	lyonel.texUnit(shaderProgram, "tex0", 0);
+	Texture planks("resources/textures/planks.png", GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE);
+	planks.texUnit(shaderProgram, "tex0", 0);
 
+	// Specular texture
+	Texture planksSpec("resources/textures/planksSpec.png", GL_TEXTURE_2D, 1, GL_RED, GL_UNSIGNED_BYTE);
+	planksSpec.texUnit(shaderProgram, "tex1", 1);
 
 	/*  LIGHT SHADER  */
 	Shader lightShader("light.vert", "light.frag");
@@ -194,10 +213,10 @@ int main(void)
 	lightVBO.Unbind();
 	lightEBO.Unbind();
 
-	glm::vec4 lightColor = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
+	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
 
-	glm::vec3 lightPos = glm::vec3(0.3f, 0.5f, 0.5f);
+	glm::vec3 lightPos = glm::vec3(0.3f, 0.2f, 0.3f);
 	glm::mat4 lightModel = glm::mat4(1.0f);
 	lightModel = glm::translate(lightModel, lightPos);
 
@@ -237,12 +256,13 @@ int main(void)
 
 		camera.Matrix(shaderProgram, "camMatrix");
 
-		lyonel.Bind();
+		planks.Bind();
+		planksSpec.Bind();
 
 		VAO1.Bind();
 
 
-		glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, sizeof(plane_indices) / sizeof(int), GL_UNSIGNED_INT, 0);
 
 		// Light Shader
 		lightShader.Activate();
@@ -259,7 +279,7 @@ int main(void)
 	VAO1.Delete();
 	VBO1.Delete();
 	EBO1.Delete();
-	lyonel.Delete();
+	planks.Delete();
 	shaderProgram.Delete();
 
 	// Termination

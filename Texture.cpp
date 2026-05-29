@@ -13,13 +13,14 @@ unsigned char* LoadTextureImage(const char* path, int* widthImg, int* heightImg,
 	return bytes;
 }
 
-Texture::Texture(const char* image, GLenum texType, GLenum slot, GLenum format, GLenum pixelType)
+Texture::Texture(const char* image, GLenum texType, GLuint slot, GLenum format, GLenum pixelType)
 {
 	int widthImg, heightImg, numColCh;
 	unsigned char* bytes = LoadTextureImage(image, &widthImg, &heightImg, &numColCh);
 
 	glGenTextures(1, &id);
-	glActiveTexture(slot);
+	glActiveTexture(GL_TEXTURE0 + slot); // adding to GL_TEXTURE0 allows enumeration using the uint "slot"
+	this->unit = slot;
 	glBindTexture(texType, id);
 
 	glTexParameteri(texType, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -48,6 +49,7 @@ void Texture::texUnit(Shader& shader, const char* uniform, GLuint unit)
 
 void Texture::Bind()
 {
+	glActiveTexture(GL_TEXTURE0 + unit);
 	glBindTexture(type, id);
 }
 
