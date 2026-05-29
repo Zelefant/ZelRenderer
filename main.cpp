@@ -204,6 +204,7 @@ int main(void)
 	glm::vec3 pyramidPos = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::mat4 pyramidModel = glm::mat4(1.0f);
 	pyramidModel = glm::translate(pyramidModel, pyramidPos);
+	Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
 
 	lightShader.Activate();
 	glUniformMatrix4fv(glGetUniformLocation(lightShader.id, "model"), 1, GL_FALSE, glm::value_ptr(lightModel));
@@ -212,9 +213,6 @@ int main(void)
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram.id, "model"), 1, GL_FALSE, glm::value_ptr(pyramidModel));
 	glUniform4f(glGetUniformLocation(shaderProgram.id, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 	glUniform3f(glGetUniformLocation(shaderProgram.id, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
-
-
-	Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
 
 	float deltaTime = 0.0f;
 	float prevTime = 0.0f;
@@ -235,6 +233,8 @@ int main(void)
 		camera.UpdateMatrix(45.0f, 0.1f, 100.0f);
 
 		shaderProgram.Activate();
+		glUniform3f(glGetUniformLocation(shaderProgram.id, "camPos"), camera.Position.x, camera.Position.y, camera.Position.z);
+
 		camera.Matrix(shaderProgram, "camMatrix");
 
 		lyonel.Bind();
