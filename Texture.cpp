@@ -13,30 +13,29 @@ unsigned char* LoadTextureImage(const char* path, int* widthImg, int* heightImg,
 	return bytes;
 }
 
-Texture::Texture(const char* image, GLenum texType, GLuint slot, GLenum format, GLenum pixelType)
+Texture::Texture(const char* image, const char* texType, GLuint slot, GLenum format, GLenum pixelType)
 {
+	type = texType;
+
 	int widthImg, heightImg, numColCh;
 	unsigned char* bytes = LoadTextureImage(image, &widthImg, &heightImg, &numColCh);
 
 	glGenTextures(1, &id);
 	glActiveTexture(GL_TEXTURE0 + slot); // adding to GL_TEXTURE0 allows enumeration using the uint "slot"
 	this->unit = slot;
-	glBindTexture(texType, id);
+	glBindTexture(GL_TEXTURE_2D, id);
 
-	glTexParameteri(texType, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(texType, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	glTexParameteri(texType, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(texType, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-	glTexImage2D(texType, 0, GL_RGBA, widthImg, heightImg, 0, format, pixelType, bytes);
-	glGenerateMipmap(texType);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, widthImg, heightImg, 0, format, pixelType, bytes);
+	glGenerateMipmap(GL_TEXTURE_2D);
 
 	stbi_image_free(bytes);
-	glBindTexture(texType, 0);
-
-	this->type = texType;
-
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 // Modify a texture uniform
@@ -50,12 +49,12 @@ void Texture::texUnit(Shader& shader, const char* uniform, GLuint unit)
 void Texture::Bind()
 {
 	glActiveTexture(GL_TEXTURE0 + unit);
-	glBindTexture(type, id);
+	glBindTexture(GL_TEXTURE_2D, id);
 }
 
 void Texture::Unbind()
 {
-	glBindTexture(type, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void Texture::Delete()

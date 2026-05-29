@@ -12,6 +12,7 @@
 
 #include "Texture.h"
 #include "Camera.h"
+#include "Mesh.h"
 
 const unsigned int width = 800;
 const unsigned int height = 800;
@@ -19,65 +20,35 @@ const unsigned int height = 800;
 int main(void)
 {
 
-	GLfloat vertices[] =
-	{
-		//			     Coordinates			   /		Colors			//	Texture Coordinates
-		-0.5f, 0.0f, -0.5f,								1.0f, 0.0f, 0.0f,		0.0f, 0.0f,
-		-0.5f, 0.0f, 0.5f,								1.0f, 0.0f, 0.0f,		1.0f, 0.0f,
-		0.5f, 0.0f, 0.5f,								1.0f, 0.0f, 0.0f,		0.0f, 0.0f,
-		0.5f, 0.0f, -0.5f,								1.0f, 0.0f, 0.0f,		1.0f, 0.0f,
-		0.0f, 0.8f, 0.0f,								1.0f, 0.0f, 0.0f,		0.5f, 1.0f,
-
+	// Vertices coordinates
+	Vertex vertices[] =
+	{ //               COORDINATES           /            COLORS          /           NORMALS         /       TEXTURE COORDINATES    //
+		Vertex{glm::vec3(-1.0f, 0.0f,  1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 0.0f)},
+		Vertex{glm::vec3(-1.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 1.0f)},
+		Vertex{glm::vec3(1.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f)},
+		Vertex{glm::vec3(1.0f, 0.0f,  1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 0.0f)}
 	};
 
-	GLfloat normalized_pyramid_vertices[] =
+	// Indices for vertices order
+	GLuint indices[] =
 	{
-		//     COORDINATES     /        COLORS          /    TexCoord   /        NORMALS       //
-		-0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f, 	 0.0f, 0.0f,      0.0f, -1.0f, 0.0f, // Bottom side
-		-0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	 0.0f, 1.0f,      0.0f, -1.0f, 0.0f, // Bottom side
-		 0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	 1.0f, 1.0f,      0.0f, -1.0f, 0.0f, // Bottom side
-		 0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	 1.0f, 0.0f,      0.0f, -1.0f, 0.0f, // Bottom side
-
-		-0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f, 	 0.0f, 0.0f,     -0.8f, 0.5f,  0.0f, // Left Side
-		-0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	 1.0f, 0.0f,     -0.8f, 0.5f,  0.0f, // Left Side
-		 0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	 0.5f, 1.0f,     -0.8f, 0.5f,  0.0f, // Left Side
-
-		-0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	 1.0f, 0.0f,      0.0f, 0.5f, -0.8f, // Non-facing side
-		 0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	 0.0f, 0.0f,      0.0f, 0.5f, -0.8f, // Non-facing side
-		 0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	 0.5f, 1.0f,      0.0f, 0.5f, -0.8f, // Non-facing side
-
-		 0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	 0.0f, 0.0f,      0.8f, 0.5f,  0.0f, // Right side
-		 0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	 1.0f, 0.0f,      0.8f, 0.5f,  0.0f, // Right side
-		 0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	 0.5f, 1.0f,      0.8f, 0.5f,  0.0f, // Right side
-
-		 0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	 1.0f, 0.0f,      0.0f, 0.5f,  0.8f, // Facing side
-		-0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f, 	 0.0f, 0.0f,      0.0f, 0.5f,  0.8f, // Facing side
-		 0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	 0.5f, 1.0f,      0.0f, 0.5f,  0.8f  // Facing side
+		0, 1, 2,
+		0, 2, 3
 	};
 
-	GLfloat plane_vertices[] =
-	{
-		//     COORDINATES     /        COLORS          /    TexCoord   /        NORMALS       //
-		-0.5f, 0.0f, -0.5f,		0.83f, 0.70f, 0.44f,	 0.0f, 0.0f,		0.0f, 1.0f, 0.0f,
-		-0.5f, 0.0f, 0.5f,		0.83f, 0.70f, 0.44f,	 0.0f, 1.0f,		0.0f, 1.0f, 0.0f,
-		0.5f, 0.0f, 0.5f,		0.83f, 0.70f, 0.44f,	 1.0f, 1.0f,		0.0f, 1.0f, 0.0f,
-		0.5f, 0.0f, -0.5f,		0.83f, 0.70f, 0.44f,	 1.0f, 0.0f,		0.0f, 1.0f, 0.0f,
-	};
-
-
-	GLfloat light_vertices[] =
+	Vertex lightVertices[] =
 	{ //     COORDINATES     //
-		-0.1f, -0.1f,  0.1f,
-		-0.1f, -0.1f, -0.1f,
-		 0.1f, -0.1f, -0.1f,
-		 0.1f, -0.1f,  0.1f,
-		-0.1f,  0.1f,  0.1f,
-		-0.1f,  0.1f, -0.1f,
-		 0.1f,  0.1f, -0.1f,
-		 0.1f,  0.1f,  0.1f
+		Vertex{glm::vec3(-0.1f, -0.1f,  0.1f)},
+		Vertex{glm::vec3(-0.1f, -0.1f, -0.1f)},
+		Vertex{glm::vec3(0.1f, -0.1f, -0.1f)},
+		Vertex{glm::vec3(0.1f, -0.1f,  0.1f)},
+		Vertex{glm::vec3(-0.1f,  0.1f,  0.1f)},
+		Vertex{glm::vec3(-0.1f,  0.1f, -0.1f)},
+		Vertex{glm::vec3(0.1f,  0.1f, -0.1f)},
+		Vertex{glm::vec3(0.1f,  0.1f,  0.1f)}
 	};
 
-	GLuint light_indices[] =
+	GLuint lightIndices[] =
 	{
 		0, 1, 2,
 		0, 2, 3,
@@ -93,56 +64,6 @@ int main(void)
 		4, 6, 7
 	};
 
-	GLfloat square_vertices[] =
-	{
-		//			     Coordinates			   /		Colors			//	Texture Coordinates
-		-0.5f, -0.5f, 0.0f,								1.0f, 0.0f, 0.0f,		0.0f, 0.0f,
-		-0.5f, 0.5f, 0.0f,								0.0f, 1.0f, 0.0f,		0.0f, 1.0f,
-		0.5f, 0.5f, 0.0f,								0.0f, 0.0f, 1.0f,		1.0f, 1.0f,
-		0.5f, -0.5f, 0.0f,								1.0f, 1.0f, 0.0f,		1.0f, 0.0f
-	};
-
-	GLfloat triforce_vertices[] =
-	{
-		//			     Coordinates			   /		Colors			//
-		-0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,		0.4f, 0.0f, 0.3f,
-		0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,			0.1f, 0.6f, 0.3f,
-		0.0f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f,		1.0f, 0.2f, 0.3f,
-
-		-0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f,		0.5f, 0.8f, 0.3f,
-		0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f,		0.1f, 0.3f, 0.3f,
-		0.0f, -0.5f * float(sqrt(3)) / 3, 0.0f,			0.0f, 0.8f, 0.3f
-	};
-
-	GLuint plane_indices[] =
-	{
-		0, 1, 2,
-		3, 0, 2,
-	};
-
-	GLuint pyramid_indices[] =
-	{
-		0, 1, 2, // Bottom side
-		0, 2, 3, // Bottom side
-		4, 6, 5, // Left side
-		7, 9, 8, // Non-facing side
-		10, 12, 11, // Right side
-		13, 15, 14 // Facing side
-	};
-
-	GLuint square_indices[] =
-	{
-		0, 2, 1,
-		0, 3, 2
-	};
-
-	GLuint triforce_indices[] =
-	{
-		0, 3, 5,
-		3, 2, 4,
-		5, 4, 1
-	};
-	
 
 	// Initialization
 	glfwInit();
@@ -170,48 +91,26 @@ int main(void)
 	glViewport(0, 0, 800, 800);
 	glEnable(GL_DEPTH_TEST);
 
+	Texture textures[] =
+	{
+		Texture("resources/textures/planks.png", "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE),
+		Texture("resources/textures/planksSpec.png", "specular", 1, GL_RED, GL_UNSIGNED_BYTE),
+	};
+
 	/*  TEXTURE SHADER  */
 	// Create Shader Program
 	Shader shaderProgram("default.vert", "default.frag");
-
-	// Create the VAO and bind it
-	VAO VAO1;
-	VAO1.Bind();
-
-	// Create the VBO and EBO and bind it
-	VBO VBO1(plane_vertices, sizeof(plane_vertices));
-	EBO EBO1(plane_indices, sizeof(plane_indices));
-
-	// Link the VBO to the VAO and unbind all three
-	VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 11 * sizeof(float), (void*)0);
-	VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 11 * sizeof(float), (void*)(3 * sizeof(float)));
-	VAO1.LinkAttrib(VBO1, 2, 2, GL_FLOAT, 11 * sizeof(float), (void*)(6 * sizeof(float)));
-	VAO1.LinkAttrib(VBO1, 3, 3, GL_FLOAT, 11 * sizeof(float), (void*)(8 * sizeof(float)));
-
-	VAO1.Unbind();
-	VBO1.Unbind();
-	EBO1.Unbind();
-
-	// Texture
-	Texture planks("resources/textures/planks.png", GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE);
-	planks.texUnit(shaderProgram, "tex0", 0);
-
-	// Specular texture
-	Texture planksSpec("resources/textures/planksSpec.png", GL_TEXTURE_2D, 1, GL_RED, GL_UNSIGNED_BYTE);
-	planksSpec.texUnit(shaderProgram, "tex1", 1);
+	std::vector<Vertex> verts(vertices, vertices + sizeof(vertices) / sizeof(Vertex));
+	std::vector<GLuint> ind(indices, indices + sizeof(indices) / sizeof(GLuint));
+	std::vector<Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
+	Mesh floor(verts, ind, tex);
 
 	/*  LIGHT SHADER  */
 	Shader lightShader("light.vert", "light.frag");
-	VAO lightVAO;
-	lightVAO.Bind();
+	std::vector<Vertex> lightVerts(lightVertices, lightVertices + sizeof(lightVertices) / sizeof(Vertex));
+	std::vector<GLuint> lightInd(lightIndices, lightIndices + sizeof(lightIndices) / sizeof(GLuint));
+	Mesh light(lightVerts, lightInd, tex);
 
-	VBO lightVBO(light_vertices, sizeof(light_vertices));
-	EBO lightEBO(light_indices, sizeof(light_indices));
-
-	lightVAO.LinkAttrib(lightVBO, 0, 3, GL_FLOAT, 3 * sizeof(float), (void*)0);
-	lightVAO.Unbind();
-	lightVBO.Unbind();
-	lightEBO.Unbind();
 
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -251,35 +150,14 @@ int main(void)
 
 		camera.UpdateMatrix(45.0f, 0.1f, 100.0f);
 
-		shaderProgram.Activate();
-		glUniform3f(glGetUniformLocation(shaderProgram.id, "camPos"), camera.Position.x, camera.Position.y, camera.Position.z);
-
-		camera.Matrix(shaderProgram, "camMatrix");
-
-		planks.Bind();
-		planksSpec.Bind();
-
-		VAO1.Bind();
-
-
-		glDrawElements(GL_TRIANGLES, sizeof(plane_indices) / sizeof(int), GL_UNSIGNED_INT, 0);
-
-		// Light Shader
-		lightShader.Activate();
-		camera.Matrix(lightShader, "camMatrix");
-		lightVAO.Bind();
-		glDrawElements(GL_TRIANGLES, sizeof(light_indices) / sizeof(int), GL_UNSIGNED_INT, 0);
-
+		floor.Draw(shaderProgram, camera);
+		light.Draw(lightShader, camera);
 
 		glfwSwapBuffers(window);
 
 		glfwPollEvents();
 	}
 
-	VAO1.Delete();
-	VBO1.Delete();
-	EBO1.Delete();
-	planks.Delete();
 	shaderProgram.Delete();
 
 	// Termination
