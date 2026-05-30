@@ -5,17 +5,17 @@
 #include <stb/stb_image.h>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "ShaderClass.h"
-#include "VBO.h"
-#include "VAO.h"
-#include "EBO.h"
+#include "render/ShaderClass.h"
+#include "render/VBO.h"
+#include "render/VAO.h"
+#include "render/EBO.h"
 
-#include "Texture.h"
-#include "Camera.h"
-#include "Mesh.h"
-#include "Model.h"
+#include "render/Texture.h"
+#include "render/Camera.h"
+#include "render/Mesh.h"
+#include "render/Model.h"
 
-#include "InputHandler.h"
+#include "input/InputHandler.h"
 
 
 
@@ -110,7 +110,7 @@ int main(void)
 	input.RegisterAction("close_window", GLFW_KEY_ESCAPE);
 
 	// Create Default Shader
-	Shader defaultShader("default.vert", "default.frag");
+	Shader defaultShader("shaders/default.vert", "shaders/default.frag");
 
 
 

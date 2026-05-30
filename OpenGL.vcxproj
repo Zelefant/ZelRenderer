@@ -137,36 +137,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="EBO.cpp" />
     <ClCompile Include="glad.c" />
-    <ClCompile Include="InputHandler.cpp" />
+    <ClCompile Include="input\InputHandler.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Mesh.cpp" />
-    <ClCompile Include="Model.cpp" />
-    <ClCompile Include="ShaderClass.cpp" />
+    <ClCompile Include="render\Camera.cpp" />
+    <ClCompile Include="render\EBO.cpp" />
+    <ClCompile Include="render\Mesh.cpp" />
+    <ClCompile Include="render\Model.cpp" />
+    <ClCompile Include="render\ShaderClass.cpp" />
+    <ClCompile Include="render\Texture.cpp" />
+    <ClCompile Include="render\VAO.cpp" />
+    <ClCompile Include="render\VBO.cpp" />
     <ClCompile Include="stb.cpp" />
-    <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="VAO.cpp" />
-    <ClCompile Include="VBO.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="default.frag" />
-    <None Include="default.vert" />
-    <None Include="light.frag" />
-    <None Include="light.vert" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="EBO.h" />
-    <ClInclude Include="InputHandler.h" />
-    <ClInclude Include="LightSource.h" />
-    <ClInclude Include="Mesh.h" />
-    <ClInclude Include="Model.h" />
-    <ClInclude Include="ShaderClass.h" />
-    <ClInclude Include="Texture.h" />
-    <ClInclude Include="VAO.h" />
-    <ClInclude Include="VBO.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="lyonel.png">
@@ -175,6 +157,24 @@
     </Image>
     <Image Include="resources\textures\planks.png" />
     <Image Include="resources\textures\planksSpec.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="input\InputHandler.h" />
+    <ClInclude Include="render\Camera.h" />
+    <ClInclude Include="render\EBO.h" />
+    <ClInclude Include="render\LightSource.h" />
+    <ClInclude Include="render\Mesh.h" />
+    <ClInclude Include="render\Model.h" />
+    <ClInclude Include="render\ShaderClass.h" />
+    <ClInclude Include="render\Texture.h" />
+    <ClInclude Include="render\VAO.h" />
+    <ClInclude Include="render\VBO.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\default.frag" />
+    <None Include="shaders\default.vert" />
+    <None Include="shaders\light.frag" />
+    <None Include="shaders\light.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
