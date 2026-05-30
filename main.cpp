@@ -17,12 +17,13 @@
 
 #include "InputHandler.h"
 
-const unsigned int width = 800;
-const unsigned int height = 800;
+
 
 int main(void)
 {
 	bool fullbright = false;
+	unsigned int width = 1920;
+	unsigned int height = 1080;
 
 	// Vertices coordinates
 	Vertex vertices[] =
@@ -92,7 +93,7 @@ int main(void)
 		std::cout << "Failed to initialize GLAD" << std::endl;
 		return -1;
 	}
-	glViewport(0, 0, 800, 800);
+	glViewport(0, 0, width, height);
 	glEnable(GL_DEPTH_TEST);
 
 	// Initialize Input Handler
@@ -137,6 +138,20 @@ int main(void)
 		if (input.IsActionPressed("close_window"))
 		{
 			glfwSetWindowShouldClose(window, true);
+		}
+
+		// Check for window resizing
+		int currWidth, currHeight;
+		glfwGetFramebufferSize(window, &currWidth, &currHeight);
+		if (currWidth != width || currHeight != height)
+		{
+			camera.width = currWidth;
+			width = currWidth;
+
+			camera.height = currHeight;
+			height = currHeight;
+
+			glViewport(0, 0, width, height);
 		}
 
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);

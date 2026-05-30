@@ -16,7 +16,7 @@ void Camera::UpdateMatrix(float FOVdeg, float nearPlane, float farPlane)
 
 	// Provides them with the intended orientation and position as well as perspective details
 	view = glm::lookAt(Position, Position + Orientation, Up);
-	proj = glm::perspective(glm::radians(FOVdeg), (float)(width / height), nearPlane, farPlane);
+	proj = glm::perspective(glm::radians(FOVdeg), (float)width / (float)height, nearPlane, farPlane);
 
 	// Assign to cam matrix property
 	this->CamMatrix = proj * view;
