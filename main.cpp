@@ -15,6 +15,8 @@
 #include "Mesh.h"
 #include "Model.h"
 
+#include "InputHandler.h"
+
 const unsigned int width = 800;
 const unsigned int height = 800;
 
@@ -93,6 +95,19 @@ int main(void)
 	glViewport(0, 0, 800, 800);
 	glEnable(GL_DEPTH_TEST);
 
+	// Initialize Input Handler
+	InputHandler input(window);
+	
+	// Default input actions
+	input.RegisterAction("forward", GLFW_KEY_W);
+	input.RegisterAction("back", GLFW_KEY_S);
+	input.RegisterAction("left", GLFW_KEY_A);
+	input.RegisterAction("right", GLFW_KEY_D);
+	input.RegisterAction("up", GLFW_KEY_SPACE);
+	input.RegisterAction("down", GLFW_KEY_LEFT_CONTROL);
+	input.RegisterAction("sprint", GLFW_KEY_LEFT_SHIFT);
+	input.RegisterAction("close_window", GLFW_KEY_ESCAPE);
+
 	// Create Shader Program
 	Shader shaderProgram("default.vert", "default.frag");
 
@@ -118,6 +133,12 @@ int main(void)
 	// Loop - Only ends when the window is set to close
 	while (!glfwWindowShouldClose(window))
 	{
+		input.PollInputs();
+		if (input.IsActionPressed("close_window"))
+		{
+			glfwSetWindowShouldClose(window, true);
+		}
+
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -126,7 +147,7 @@ int main(void)
 		deltaTime = crntTime - prevTime;
 		prevTime = crntTime;
 
-		camera.Inputs(window, &deltaTime);
+		camera.Inputs(window, input, &deltaTime);
 
 		camera.UpdateMatrix(45.0f, 0.1f, 100.0f);
 

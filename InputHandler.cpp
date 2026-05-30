@@ -10,7 +10,7 @@ InputHandler::InputHandler(GLFWwindow* window)
 bool InputHandler::RegisterAction(string action, int key)
 {
 	// if action does not exist in input set already
-	if (this->inputSet.find(action) != this->inputSet.end())
+	if (this->inputSet.find(action) == this->inputSet.end())
 	{
 		this->inputSet[action] = key;
 		this->poll[action] = InputPoll::RELEASED;

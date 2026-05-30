@@ -11,6 +11,7 @@
 #include <glm/gtx/vector_angle.hpp>
 
 #include "ShaderClass.h"
+#include "InputHandler.h"
 
 class Camera
 {
@@ -39,7 +40,7 @@ public:
 	void Matrix(Shader& shader, const char* uniform);
 
 	// Input handler
-	void Inputs(GLFWwindow* window, float* deltaTime);
+	void Inputs(GLFWwindow* window, InputHandler input, float* deltaTime);
 };
 
 
