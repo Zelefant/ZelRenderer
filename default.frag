@@ -14,6 +14,8 @@ uniform vec4 lightColor;
 uniform vec3 lightPos;
 uniform vec3 camPos;
 
+uniform bool fullbright;
+
 vec4 PointLight()
 {
 	// Intensity formula -- Modification of inverse square formula.
@@ -100,8 +102,20 @@ vec4 SpotLight()
 	return (texture(diffuse0, texCoord) * (diffuse * inten + ambient) + texture(specular0, texCoord).r * specular * inten) * lightColor;
 }
 
+vec4 Fullbright()
+{
+	return (texture(diffuse0, texCoord));
+}
+
 
 void main()
 {
-	FragColor = SpotLight();
+	if (fullbright == false)
+	{
+		FragColor = SpotLight();
+	}
+	else
+	{
+		FragColor = Fullbright();
+	}
 }

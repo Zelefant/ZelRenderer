@@ -21,6 +21,8 @@ const unsigned int height = 800;
 int main(void)
 {
 
+	bool fullbright = false;
+
 	// Vertices coordinates
 	Vertex vertices[] =
 	{ //               COORDINATES           /            COLORS          /           NORMALS         /       TEXTURE COORDINATES    //
@@ -107,6 +109,7 @@ int main(void)
 	shaderProgram.Activate();
 	glUniform4f(glGetUniformLocation(shaderProgram.id, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 	glUniform3f(glGetUniformLocation(shaderProgram.id, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
+	glUniform1i(glGetUniformLocation(shaderProgram.id, "fullbright"), fullbright);
 
 	float deltaTime = 0.0f;
 	float prevTime = 0.0f;
