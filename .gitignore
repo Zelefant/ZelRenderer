@@ -54,6 +54,7 @@ compile_commands.json
 
 # VS files
 .vs/
+resources/
 
 # Temporary files
 *.tmp

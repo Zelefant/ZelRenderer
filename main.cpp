@@ -20,7 +20,6 @@ const unsigned int height = 800;
 
 int main(void)
 {
-
 	bool fullbright = false;
 
 	// Vertices coordinates
