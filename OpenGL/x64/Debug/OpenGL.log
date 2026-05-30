@@ -1,5 +1,19 @@
-﻿  main.cpp
+﻿  Camera.cpp
+  Mesh.cpp
+D:\Projects\OpenGLGraphics\OpenGL\Mesh.cpp(79,43): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+  Model.cpp
+D:\Projects\OpenGLGraphics\OpenGL\Model.cpp(300,90): warning C4267: 'argument': conversion from 'size_t' to 'GLuint', possible loss of data
+D:\Projects\OpenGLGraphics\OpenGL\Model.cpp(307,92): warning C4267: 'argument': conversion from 'size_t' to 'GLuint', possible loss of data
+  main.cpp
 C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\filesystem(12): warning STL4038: The contents of <filesystem> are available only with C++17 or later.
-D:\Projects\OpenGLGraphics\OpenGL\main.cpp(146,24): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-D:\Projects\OpenGLGraphics\OpenGL\main.cpp(147,14): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Projects\OpenGLGraphics\OpenGL\main.cpp(124,24): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Projects\OpenGLGraphics\OpenGL\main.cpp(125,14): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  Generating Code...
+glfw3.lib(input.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(input.obj)' or at ''; linking object as if no debug info
+glfw3.lib(monitor.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(monitor.obj)' or at ''; linking object as if no debug info
+glfw3.lib(window.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(window.obj)' or at ''; linking object as if no debug info
+glfw3.lib(null_monitor.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(null_monitor.obj)' or at ''; linking object as if no debug info
+glfw3.lib(null_window.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(null_window.obj)' or at ''; linking object as if no debug info
+glfw3.lib(win32_joystick.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(win32_joystick.obj)' or at ''; linking object as if no debug info
+glfw3.lib(win32_window.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(win32_window.obj)' or at ''; linking object as if no debug info
   OpenGL.vcxproj -> D:\Projects\OpenGLGraphics\OpenGL\x64\Debug\OpenGL.exe
