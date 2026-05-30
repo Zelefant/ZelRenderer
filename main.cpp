@@ -109,8 +109,8 @@ int main(void)
 	input.RegisterAction("sprint", GLFW_KEY_LEFT_SHIFT);
 	input.RegisterAction("close_window", GLFW_KEY_ESCAPE);
 
-	// Create Shader Program
-	Shader shaderProgram("default.vert", "default.frag");
+	// Create Default Shader
+	Shader defaultShader("default.vert", "default.frag");
 
 
 
@@ -121,10 +121,10 @@ int main(void)
 
 	Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
 
-	shaderProgram.Activate();
-	glUniform4f(glGetUniformLocation(shaderProgram.id, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
-	glUniform3f(glGetUniformLocation(shaderProgram.id, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
-	glUniform1i(glGetUniformLocation(shaderProgram.id, "fullbright"), fullbright);
+	defaultShader.Activate();
+	glUniform4f(glGetUniformLocation(defaultShader.id, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
+	glUniform3f(glGetUniformLocation(defaultShader.id, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
+	glUniform1i(glGetUniformLocation(defaultShader.id, "fullbright"), fullbright);
 
 	float deltaTime = 0.0f;
 	float prevTime = 0.0f;
@@ -166,14 +166,14 @@ int main(void)
 
 		camera.UpdateMatrix(45.0f, 0.1f, 100.0f);
 
-		model.Draw(shaderProgram, camera);
+		model.Draw(defaultShader, camera);
 
 		glfwSwapBuffers(window);
 
 		glfwPollEvents();
 	}
 
-	shaderProgram.Delete();
+	defaultShader.Delete();
 
 	// Termination
 	glfwDestroyWindow(window);
