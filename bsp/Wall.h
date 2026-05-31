@@ -7,10 +7,11 @@ class Wall
 {
 public:
 	Wall();
-	Wall(glm::vec3 vert1, glm::vec3 vert2);
+	Wall(glm::vec2 vert1, glm::vec2 vert2);
 
-private:
-	glm::vec3 vert1, vert2;
+	bool operator==(const Wall& comp);
+
+	glm::vec2 vert1, vert2;
 };
 
 

@@ -137,6 +137,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="bsp\BSPTree.cpp" />
+    <ClCompile Include="bsp\Wall.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="input\InputHandler.cpp" />
     <ClCompile Include="main.cpp" />
@@ -159,6 +161,10 @@
     <Image Include="resources\textures\planksSpec.png" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="bsp\BSPTree.h" />
+    <ClInclude Include="bsp\BSPNode.h" />
+    <ClInclude Include="bsp\BSPNode.cpp" />
+    <ClInclude Include="bsp\Wall.h" />
     <ClInclude Include="input\InputHandler.h" />
     <ClInclude Include="render\Camera.h" />
     <ClInclude Include="render\EBO.h" />
@@ -171,6 +177,7 @@
     <ClInclude Include="render\VBO.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="bsp\bsp_test.map" />
     <None Include="shaders\default.frag" />
     <None Include="shaders\default.vert" />
     <None Include="shaders\light.frag" />
