@@ -68,19 +68,45 @@ BSPNode* BSPTree::GenerateBSP(std::vector<Wall> wallList)
 	std::mt19937 g(rd());
 	std::shuffle(wall_indices.begin(), wall_indices.end(), g);
 
-	// Determine number of crosses for the 5 random walls
-	int numCrosses[5];
+	// Determine crosses for the 5 random walls
+	std::vector<Wall> crosses[5];
 	for (int i = 0; i < 5; i++)
 	{
-		numCrosses[i] = 0;
+		crosses[i] = std::vector<Wall>();
 		Wall wall = wallList[wall_indices[i]];
 		for (int j = 0; j < wallList.size(); j++)
 		{
-			if (wall == wallList[j]) continue; // Don't check the wall we selected for crosses.
+			Wall crossWall = wallList[j];
+			if (wall == crossWall) continue; // Don't check the wall we selected for crosses.
 
-			// TODO. check cross.
+			// Check cross. 
+			// Formula:
+			// Line segment endpoints: p1 = (x1, y1) and p2 = (x2, y2)
+			// Points on line: p3 = (x3, y3) and p4 = (x4, y4) (These are just the wall vertices)
+			// If and only if this inequality is satisfied does the line segment cross the line:
+			// ((x4 - x3)(y1 - y3) - (x1 - x3)(y4 - y3)) * ((x4 - x3)(y2 - y3) - (x2 - x3)(y4 - y3)) <= 0
+			float firstHalf = (wall.vert2.x - wall.vert1.x) * (crossWall.vert1.y - wall.vert1.y) - (crossWall.vert1.x - wall.vert1.x) * (wall.vert2.y - wall.vert1.y);
+			float secondHalf = (wall.vert2.x - wall.vert1.x) * (crossWall.vert2.y - wall.vert1.y) - (crossWall.vert2.x - wall.vert1.x) * (wall.vert2.y - wall.vert1.y);
+			if (firstHalf * secondHalf <= 0)
+			{
+				// If the above inequality is satisfied, the line crosses, add to crosses.
+				crosses[i].push_back(crossWall);
+			}
 		}
 	}
+
+	// Determine which wall has the most crosses
+	int wallIndex = -1;
+	int numCrosses = -1;
+	for (int i = 0; i < 5; i++)
+	{
+		if (crosses[i].size() > numCrosses)
+		{
+			wallIndex = i;
+			numCrosses = crosses[i].size();
+		}
+	}
+
 
 
 }
