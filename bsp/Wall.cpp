@@ -1,9 +1,10 @@
 #include "Wall.h"
 
-Wall::Wall(glm::vec2 vert1, glm::vec2 vert2)
+Wall::Wall(glm::vec2 vert1, glm::vec2 vert2, bool visible)
 {
 	this->vert1 = vert1;
 	this->vert2 = vert2;
+	this->visible = visible;
 }
 
 Wall::Wall()

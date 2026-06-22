@@ -49,6 +49,8 @@ BSPTree::BSPTree(std::string map_file_path)
 		wallList.push_back(wall);
 	}
 
+	// CRITICAL : DO NOT MODIFY THE WALL LIST AFTER THIS POINT.
+	// These are pointers to the original wall list vector, it should not be changed anymore.
 	this->root = GenerateBSP(wallList);
 }
 
@@ -68,15 +70,22 @@ BSPNode* BSPTree::GenerateBSP(std::vector<Wall> wallList)
 	std::mt19937 g(rd());
 	std::shuffle(wall_indices.begin(), wall_indices.end(), g);
 
-	// Determine crosses for the 5 random walls
-	std::vector<Wall> crosses[5];
-	for (int i = 0; i < 5; i++)
+	// Determine crosses, front and back for the 5 random walls
+	std::vector<Wall*> crosses[5];
+	std::vector<Wall*> front[5];
+	std::vector<Wall*> behind[5];
+
+	int numCandidates = std::min(5, (int)wallList.size()); // Avoids edge case where number of walls is less than 5
+
+	for (int i = 0; i < numCandidates; i++)
 	{
-		crosses[i] = std::vector<Wall>();
-		Wall wall = wallList[wall_indices[i]];
+		crosses[i] = std::vector<Wall*>();
+		front[i] = std::vector<Wall*>();
+		behind[i] = std::vector<Wall*>();
+		Wall& wall = wallList[wall_indices[i]];
 		for (int j = 0; j < wallList.size(); j++)
 		{
-			Wall crossWall = wallList[j];
+			Wall& crossWall = wallList[j];
 			if (wall == crossWall) continue; // Don't check the wall we selected for crosses.
 
 			// Check cross. 
@@ -89,24 +98,47 @@ BSPNode* BSPTree::GenerateBSP(std::vector<Wall> wallList)
 			float secondHalf = (wall.vert2.x - wall.vert1.x) * (crossWall.vert2.y - wall.vert1.y) - (crossWall.vert2.x - wall.vert1.x) * (wall.vert2.y - wall.vert1.y);
 			if (firstHalf * secondHalf <= 0)
 			{
-				// If the above inequality is satisfied, the line crosses, add to crosses.
-				crosses[i].push_back(crossWall);
+				// If the above inequality is satisfied, the wall crosses, add to crosses.
+				crosses[i].push_back(&crossWall);
+			}
+			else if (firstHalf > 0 && secondHalf > 0)
+			{
+				// Wall is in front of line.
+				front[i].push_back(&crossWall);
+			}
+			else
+			{
+				// Wall is behind line.
+				behind[i].push_back(&crossWall);
 			}
 		}
 	}
 
-	// Determine which wall has the most crosses
+	// Determine which wall has the least crosses and use that for 
 	int wallIndex = -1;
-	int numCrosses = -1;
+	int numCrosses = INT_MAX;
 	for (int i = 0; i < 5; i++)
 	{
-		if (crosses[i].size() > numCrosses)
+		if (crosses[i].size() < numCrosses)
 		{
 			wallIndex = i;
 			numCrosses = crosses[i].size();
 		}
 	}
 
+	// Split and create new shapes
 
+	// Create BSP Nodes
+
+}
+
+void BSPTree::CreateNewShape(
+	std::vector<Wall*>* shape1,
+	std::vector<Wall*>* shape2, 
+	std::vector<Wall*> cross, 
+	std::vector<Wall*> front, 
+	std::vector<Wall*> back
+)
+{
 
 }

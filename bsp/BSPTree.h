@@ -13,6 +13,13 @@ public:
 private:
 
 	BSPNode* GenerateBSP(std::vector<Wall> wallList);
+	void CreateNewShape(
+		std::vector<Wall*>* shape1,
+		std::vector<Wall*>* shape2,
+		std::vector<Wall*> cross,
+		std::vector<Wall*> front,
+		std::vector<Wall*> back
+	);
 	BSPNode* root;
 };
 
