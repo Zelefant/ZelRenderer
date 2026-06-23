@@ -1,26 +1,29 @@
-﻿  InputHandler.cpp
-D:\Projects\OpenGLGraphics\OpenGL\input\InputHandler.h(11,14): warning C4091: 'typedef ': ignored on left of 'InputPoll' when no variable is declared
-  (compiling source file 'input/InputHandler.cpp')
+﻿  BSPTree.cpp
+D:\Projects\OpenGLGraphics\OpenGL\bsp\BSPTree.h(15,7): error C2039: 'random_device': is not a member of 'std'
+  (compiling source file 'bsp/BSPTree.cpp')
+      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\functional(31,1):
+      see declaration of 'std'
   
-glfw3.lib(input.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(input.obj)' or at ''; linking object as if no debug info
-glfw3.lib(init.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(init.obj)' or at ''; linking object as if no debug info
-glfw3.lib(window.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(window.obj)' or at ''; linking object as if no debug info
-glfw3.lib(context.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(context.obj)' or at ''; linking object as if no debug info
-glfw3.lib(win32_time.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(win32_time.obj)' or at ''; linking object as if no debug info
-glfw3.lib(win32_thread.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(win32_thread.obj)' or at ''; linking object as if no debug info
-glfw3.lib(platform.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(platform.obj)' or at ''; linking object as if no debug info
-glfw3.lib(monitor.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(monitor.obj)' or at ''; linking object as if no debug info
-glfw3.lib(vulkan.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(vulkan.obj)' or at ''; linking object as if no debug info
-glfw3.lib(win32_init.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(win32_init.obj)' or at ''; linking object as if no debug info
-glfw3.lib(null_init.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(null_init.obj)' or at ''; linking object as if no debug info
-glfw3.lib(win32_module.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(win32_module.obj)' or at ''; linking object as if no debug info
-glfw3.lib(win32_monitor.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(win32_monitor.obj)' or at ''; linking object as if no debug info
-glfw3.lib(win32_window.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(win32_window.obj)' or at ''; linking object as if no debug info
-glfw3.lib(win32_joystick.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(win32_joystick.obj)' or at ''; linking object as if no debug info
-glfw3.lib(wgl_context.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(wgl_context.obj)' or at ''; linking object as if no debug info
-glfw3.lib(egl_context.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(egl_context.obj)' or at ''; linking object as if no debug info
-glfw3.lib(osmesa_context.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(osmesa_context.obj)' or at ''; linking object as if no debug info
-glfw3.lib(null_monitor.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(null_monitor.obj)' or at ''; linking object as if no debug info
-glfw3.lib(null_window.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(null_window.obj)' or at ''; linking object as if no debug info
-glfw3.lib(null_joystick.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(null_joystick.obj)' or at ''; linking object as if no debug info
-  OpenGL.vcxproj -> D:\Projects\OpenGLGraphics\OpenGL\x64\Debug\OpenGL.exe
+D:\Projects\OpenGLGraphics\OpenGL\bsp\BSPTree.h(15,21): error C3646: 'rd': unknown override specifier
+  (compiling source file 'bsp/BSPTree.cpp')
+  
+D:\Projects\OpenGLGraphics\OpenGL\bsp\BSPTree.h(15,7): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'bsp/BSPTree.cpp')
+  
+D:\Projects\OpenGLGraphics\OpenGL\bsp\BSPTree.h(16,7): error C2039: 'mt19937': is not a member of 'std'
+  (compiling source file 'bsp/BSPTree.cpp')
+      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\functional(31,1):
+      see declaration of 'std'
+  
+D:\Projects\OpenGLGraphics\OpenGL\bsp\BSPTree.h(16,15): error C3646: 'g': unknown override specifier
+  (compiling source file 'bsp/BSPTree.cpp')
+  
+D:\Projects\OpenGLGraphics\OpenGL\bsp\BSPTree.h(16,7): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  (compiling source file 'bsp/BSPTree.cpp')
+  
+D:\Projects\OpenGLGraphics\OpenGL\bsp\BSPTree.cpp(10,2): error C2065: 'g': undeclared identifier
+D:\Projects\OpenGLGraphics\OpenGL\bsp\BSPTree.cpp(10,19): error C3861: 'rd': identifier not found
+D:\Projects\OpenGLGraphics\OpenGL\bsp\BSPTree.cpp(73,57): error C2065: 'g': undeclared identifier
+D:\Projects\OpenGLGraphics\OpenGL\bsp\BSPTree.cpp(127,32): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  Wall.cpp
+  Generating Code...

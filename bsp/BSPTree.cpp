@@ -6,6 +6,9 @@
 
 BSPTree::BSPTree(std::string map_file_path)
 {
+	// Set up random device.
+	g = std::mt19937(rd());
+
 	// Load the map file and create an array containing every wall.
 	std::ifstream map_file(map_file_path);
 	std::string v1s, v2s, v3s, v4s;
@@ -66,8 +69,7 @@ BSPNode* BSPTree::GenerateBSP(std::vector<Wall> wallList)
 	}
 
 	// Shuffle index list (will use the 5 front indices in the shuffled list)
-	std::random_device rd;
-	std::mt19937 g(rd());
+
 	std::shuffle(wall_indices.begin(), wall_indices.end(), g);
 
 	// Determine crosses, front and back for the 5 random walls

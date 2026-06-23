@@ -12,6 +12,9 @@ public:
 
 private:
 
+	std::random_device rd;
+	std::mt19937 g;
+
 	BSPNode* GenerateBSP(std::vector<Wall> wallList);
 	void CreateNewShape(
 		std::vector<Wall*>* shape1,
