@@ -41,26 +41,26 @@ BSPTree::BSPTree(std::string map_file_path)
     this->root = GenerateBSP(vertexList);
 }
 
-BSPNode* BSPTree::GenerateBSP(std::vector<BSPVertex>& wallList)
+BSPNode* BSPTree::GenerateBSP(std::vector<BSPVertex>& vertList)
 {
     // Step 1: Choose Wall
     // Choose 5 random walls to test for least crossed heuristic
 
-    std::vector<int> wall_indices;
+    std::vector<int> vert_indices;
 
-    for (int i = 0; i < wallList.size(); i++)
+    for (int i = 0; i < vertList.size(); i++)
     {
-        wall_indices.push_back(i);
+        vert_indices.push_back(i);
     }
 
-    std::shuffle(wall_indices.begin(), wall_indices.end(), g);
+    std::shuffle(vert_indices.begin(), vert_indices.end(), g);
 
     // Determine crosses, front and back for the 5 random walls
     std::vector<BSPVertex*> crosses[5];
     std::vector<BSPVertex*> front[5];
     std::vector<BSPVertex*> behind[5];
 
-    int numCandidates = std::min(5, (int)wallList.size());
+    int numCandidates = std::min(5, (int)vertList.size());
 
     for (int i = 0; i < numCandidates; i++)
     {
@@ -68,36 +68,36 @@ BSPNode* BSPTree::GenerateBSP(std::vector<BSPVertex>& wallList)
         front[i] = std::vector<BSPVertex*>();
         behind[i] = std::vector<BSPVertex*>();
 
-        int wallIndex = wall_indices[i];
+        int vertIndex = vert_indices[i];
 
-        BSPVertex& wall1 = wallList[wallIndex];
-        BSPVertex& wall2 = wallList[(wallIndex + 1) % wallList.size()];
+        BSPVertex& vert1 = vertList[vertIndex];
+        BSPVertex& vert2 = vertList[(vertIndex + 1) % vertList.size()];
 
-        for (int j = 0; j < wallList.size(); j++)
+        for (int j = 0; j < vertList.size(); j++)
         {
             int crossIndex = j;
 
-            BSPVertex& cross1 = wallList[crossIndex];
-            BSPVertex& cross2 = wallList[(crossIndex + 1) % wallList.size()];
+            BSPVertex& cross1 = vertList[crossIndex];
+            BSPVertex& cross2 = vertList[(crossIndex + 1) % vertList.size()];
 
-            if (wall1 == cross1)
+            if (vert1 == cross1)
                 continue;
 
             // Check cross
 
             float firstHalf =
-                (wall2.getX() - wall1.getX()) *
-                (cross1.getY() - wall1.getY())
+                (vert2.getX() - vert1.getX()) *
+                (cross1.getY() - vert1.getY())
                 -
-                (cross1.getX() - wall1.getX()) *
-                (wall2.getY() - wall1.getY());
+                (cross1.getX() - vert1.getX()) *
+                (vert2.getY() - vert1.getY());
 
             float secondHalf =
-                (wall2.getX() - wall1.getX()) *
-                (cross2.getY() - wall1.getY())
+                (vert2.getX() - vert1.getX()) *
+                (cross2.getY() - vert1.getY())
                 -
-                (cross2.getX() - wall1.getX()) *
-                (wall2.getY() - wall1.getY());
+                (cross2.getX() - vert1.getX()) *
+                (vert2.getY() - vert1.getY());
 
             if (firstHalf * secondHalf <= 0)
             {
@@ -118,14 +118,14 @@ BSPNode* BSPTree::GenerateBSP(std::vector<BSPVertex>& wallList)
     }
 
     // Determine which wall has the least crosses and use that
-    int wallIndex = -1;
+    int vertIndex = -1;
     int numCrosses = INT_MAX;
 
     for (int i = 0; i < 5; i++)
     {
         if (crosses[i].size() < numCrosses)
         {
-            wallIndex = i;
+            vertIndex = i;
             numCrosses = crosses[i].size();
         }
     }
