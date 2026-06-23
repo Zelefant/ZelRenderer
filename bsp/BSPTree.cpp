@@ -6,140 +6,143 @@
 
 BSPTree::BSPTree(std::string map_file_path)
 {
-	// Set up random device.
-	g = std::mt19937(rd());
+    // Set up random device.
+    g = std::mt19937(rd());
 
-	// Load the map file and create an array containing every wall.
-	std::ifstream map_file(map_file_path);
-	std::string v1s, v2s, v3s, v4s;
-	std::vector<Wall> wallList = std::vector<Wall>();
-	
-	bool eof = false;
-	while (!eof)
-	{
-		float v1, v2, v3, v4;
-		std::getline(map_file, v1s);
-		std::getline(map_file, v2s);
-		if (std::getline(map_file, v3s))
-		{
-			// Get 2nd vertex and assign vars for wall
-			std::getline(map_file, v4s);
-			try
-			{
-				v1 = std::stof(v1s);
-				v2 = std::stof(v2s);
-				v3 = std::stof(v3s);
-				v4 = std::stof(v4s);
-			}
-			catch (const std::invalid_argument& e)
-			{
-				std::cerr << "Error: Invalid map file\n";
-				return;
-			}
-		}
-		else
-		{
-			// EOF - Make wall connect back to first vertex.
-			v1 = std::stof(v1s);
-			v2 = std::stof(v2s);
-			v3 = wallList[0].vert1.x;
-			v4 = wallList[0].vert1.y;
-			eof = true;
-		}
+    // Load map file and create vertex list.
+    std::ifstream map_file(map_file_path);
+    std::string xs, ys;
 
-		// Create the wall from the vertices
-		Wall wall = Wall(glm::vec2(v1, v2), glm::vec2(v3, v4));
-		wallList.push_back(wall);
-	}
+    std::vector<BSPVertex> vertexList;
 
-	// CRITICAL : DO NOT MODIFY THE WALL LIST AFTER THIS POINT.
-	// These are pointers to the original wall list vector, it should not be changed anymore.
-	this->root = GenerateBSP(wallList);
+    while (std::getline(map_file, xs))
+    {
+        if (!std::getline(map_file, ys))
+        {
+            std::cerr << "Error: Invalid map file\n";
+            return;
+        }
+
+        try
+        {
+            float x = std::stof(xs);
+            float y = std::stof(ys);
+
+            vertexList.push_back(BSPVertex(x, y));
+        }
+        catch (const std::invalid_argument&)
+        {
+            std::cerr << "Error: Invalid map file\n";
+            return;
+        }
+    }
+
+    // CRITICAL : DO NOT MODIFY THE VERTEX LIST AFTER THIS POINT.
+    this->root = GenerateBSP(vertexList);
 }
 
-BSPNode* BSPTree::GenerateBSP(std::vector<Wall> wallList)
+BSPNode* BSPTree::GenerateBSP(std::vector<BSPVertex>& wallList)
 {
-	// Step 1: Choose Wall
-	// Choose 5 random walls to test for least crossed heuristic
-	// First create index list
-	std::vector<int> wall_indices = std::vector<int>();
-	for (int i = 0; i < wallList.size(); i++)
-	{
-		wall_indices.push_back(i);
-	}
+    // Step 1: Choose Wall
+    // Choose 5 random walls to test for least crossed heuristic
 
-	// Shuffle index list (will use the 5 front indices in the shuffled list)
+    std::vector<int> wall_indices;
 
-	std::shuffle(wall_indices.begin(), wall_indices.end(), g);
+    for (int i = 0; i < wallList.size(); i++)
+    {
+        wall_indices.push_back(i);
+    }
 
-	// Determine crosses, front and back for the 5 random walls
-	std::vector<Wall*> crosses[5];
-	std::vector<Wall*> front[5];
-	std::vector<Wall*> behind[5];
+    std::shuffle(wall_indices.begin(), wall_indices.end(), g);
 
-	int numCandidates = std::min(5, (int)wallList.size()); // Avoids edge case where number of walls is less than 5
+    // Determine crosses, front and back for the 5 random walls
+    std::vector<BSPVertex*> crosses[5];
+    std::vector<BSPVertex*> front[5];
+    std::vector<BSPVertex*> behind[5];
 
-	for (int i = 0; i < numCandidates; i++)
-	{
-		crosses[i] = std::vector<Wall*>();
-		front[i] = std::vector<Wall*>();
-		behind[i] = std::vector<Wall*>();
-		Wall& wall = wallList[wall_indices[i]];
-		for (int j = 0; j < wallList.size(); j++)
-		{
-			Wall& crossWall = wallList[j];
-			if (wall == crossWall) continue; // Don't check the wall we selected for crosses.
+    int numCandidates = std::min(5, (int)wallList.size());
 
-			// Check cross. 
-			// Formula:
-			// Line segment endpoints: p1 = (x1, y1) and p2 = (x2, y2)
-			// Points on line: p3 = (x3, y3) and p4 = (x4, y4) (These are just the wall vertices)
-			// If and only if this inequality is satisfied does the line segment cross the line:
-			// ((x4 - x3)(y1 - y3) - (x1 - x3)(y4 - y3)) * ((x4 - x3)(y2 - y3) - (x2 - x3)(y4 - y3)) <= 0
-			float firstHalf = (wall.vert2.x - wall.vert1.x) * (crossWall.vert1.y - wall.vert1.y) - (crossWall.vert1.x - wall.vert1.x) * (wall.vert2.y - wall.vert1.y);
-			float secondHalf = (wall.vert2.x - wall.vert1.x) * (crossWall.vert2.y - wall.vert1.y) - (crossWall.vert2.x - wall.vert1.x) * (wall.vert2.y - wall.vert1.y);
-			if (firstHalf * secondHalf <= 0)
-			{
-				// If the above inequality is satisfied, the wall crosses, add to crosses.
-				crosses[i].push_back(&crossWall);
-			}
-			else if (firstHalf > 0 && secondHalf > 0)
-			{
-				// Wall is in front of line.
-				front[i].push_back(&crossWall);
-			}
-			else
-			{
-				// Wall is behind line.
-				behind[i].push_back(&crossWall);
-			}
-		}
-	}
+    for (int i = 0; i < numCandidates; i++)
+    {
+        crosses[i] = std::vector<BSPVertex*>();
+        front[i] = std::vector<BSPVertex*>();
+        behind[i] = std::vector<BSPVertex*>();
 
-	// Determine which wall has the least crosses and use that for 
-	int wallIndex = -1;
-	int numCrosses = INT_MAX;
-	for (int i = 0; i < 5; i++)
-	{
-		if (crosses[i].size() < numCrosses)
-		{
-			wallIndex = i;
-			numCrosses = crosses[i].size();
-		}
-	}
+        int wallIndex = wall_indices[i];
 
-	// Split and create new shapes
+        BSPVertex& wall1 = wallList[wallIndex];
+        BSPVertex& wall2 = wallList[(wallIndex + 1) % wallList.size()];
 
-	// Create BSP Nodes
+        for (int j = 0; j < wallList.size(); j++)
+        {
+            int crossIndex = j;
 
+            BSPVertex& cross1 = wallList[crossIndex];
+            BSPVertex& cross2 = wallList[(crossIndex + 1) % wallList.size()];
+
+            if (wall1 == cross1)
+                continue;
+
+            // Check cross
+
+            float firstHalf =
+                (wall2.getX() - wall1.getX()) *
+                (cross1.getY() - wall1.getY())
+                -
+                (cross1.getX() - wall1.getX()) *
+                (wall2.getY() - wall1.getY());
+
+            float secondHalf =
+                (wall2.getX() - wall1.getX()) *
+                (cross2.getY() - wall1.getY())
+                -
+                (cross2.getX() - wall1.getX()) *
+                (wall2.getY() - wall1.getY());
+
+            if (firstHalf * secondHalf <= 0)
+            {
+                // Wall crosses
+                crosses[i].push_back(&cross1);
+            }
+            else if (firstHalf > 0 && secondHalf > 0)
+            {
+                // Wall is in front
+                front[i].push_back(&cross1);
+            }
+            else
+            {
+                // Wall is behind
+                behind[i].push_back(&cross1);
+            }
+        }
+    }
+
+    // Determine which wall has the least crosses and use that
+    int wallIndex = -1;
+    int numCrosses = INT_MAX;
+
+    for (int i = 0; i < 5; i++)
+    {
+        if (crosses[i].size() < numCrosses)
+        {
+            wallIndex = i;
+            numCrosses = crosses[i].size();
+        }
+    }
+
+    // Split and create new shapes
+
+    // Create BSP Nodes
+
+    return nullptr;
 }
 
 void BSPTree::CreateNewShape(
-	std::vector<Wall*>* shape1,
-	std::vector<Wall*>* shape2, 
-	std::vector<Wall*> cross, 
-	std::vector<Wall*> front, 
-	std::vector<Wall*> back
+    std::vector<BSPVertex*>* shape1,
+    std::vector<BSPVertex*>* shape2,
+    std::vector<BSPVertex*> cross,
+    std::vector<BSPVertex*> front,
+    std::vector<BSPVertex*> back
 )
 {
 

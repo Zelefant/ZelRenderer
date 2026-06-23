@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include "BSPNode.h"
+#include "BSPVertex.h"
 
 class BSPTree
 {
@@ -15,13 +16,13 @@ private:
 	std::random_device rd;
 	std::mt19937 g;
 
-	BSPNode* GenerateBSP(std::vector<Wall> wallList);
+	BSPNode* GenerateBSP(std::vector<BSPVertex>& wallList);
 	void CreateNewShape(
-		std::vector<Wall*>* shape1,
-		std::vector<Wall*>* shape2,
-		std::vector<Wall*> cross,
-		std::vector<Wall*> front,
-		std::vector<Wall*> back
+		std::vector<BSPVertex*>* shape1,
+		std::vector<BSPVertex*>* shape2,
+		std::vector<BSPVertex*> cross,
+		std::vector<BSPVertex*> front,
+		std::vector<BSPVertex*> back
 	);
 	BSPNode* root;
 };
