@@ -28,6 +28,16 @@ Linedef::~Linedef()
 	delete(this->end);
 }
 
+BSPVertex* Linedef::Start()
+{
+	return start;
+}
+
+BSPVertex* Linedef::End()
+{
+	return end;
+}
+
 bool Linedef::operator==(const Linedef& comp)
 {
 	if (*this->start == *comp.start)
