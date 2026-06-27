@@ -22,12 +22,6 @@ Linedef::Linedef(BSPVertex* vert1, BSPVertex* vert2, bool visible)
 	this->visible = visible;
 }
 
-Linedef::~Linedef()
-{
-	delete(this->start);
-	delete(this->end);
-}
-
 BSPVertex* Linedef::Start()
 {
 	return start;

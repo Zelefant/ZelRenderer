@@ -11,8 +11,6 @@ public:
 	Linedef(glm::vec2 vert1, glm::vec2 vert2, bool visible = true);
 	Linedef(BSPVertex* vert1, BSPVertex* vert2, bool visible);
 
-	~Linedef();
-
 	bool operator==(const Linedef& comp);
 
 	BSPVertex* Start();
