@@ -15,6 +15,8 @@ BSPTree::BSPTree(std::string map_file_path)
     // Load map file and create map geometry object.
     MapGeometry geo = LoadMapGeometryFromFile(map_file_path);
     
+    // Generate BSP from map geometry walls.
+    this->root = GenerateBSP(geo.linedefs);
 }
 
 /*
@@ -78,7 +80,7 @@ MapGeometry BSPTree::LoadMapGeometryFromFile(std::string file_path)
             }
             walls.push_back(linedefs[wallID]);
         }
-        float floorHeight = sector["floatHeight"];
+        float floorHeight = sector["floorHeight"];
         float ceilingHeight = sector["ceilingHeight"];
 
         sectors[id] = new Sector(id, walls, floorHeight, ceilingHeight);
@@ -92,12 +94,16 @@ MapGeometry BSPTree::LoadMapGeometryFromFile(std::string file_path)
 }
 
 
-BSPNode* BSPTree::GenerateBSP(MapGeometry geo, int heuristic)
+BSPNode* BSPTree::GenerateBSP(std::vector<Linedef*>& linedefs, int heuristic)
 {
+    // Step 0: Base Case
+    if (linedefs.empty()) return nullptr;
+    if (linedefs.size() == 1) return new BSPNode(linedefs[0]);
+
     // Step 1: Choose Wall
     // Choose X random walls to test for least crossed heuristic
     std::vector<int> wallIndices;
-    for (const auto& wall : geo.linedefs)
+    for (const auto& wall : linedefs)
     {
         wallIndices.push_back(wall->GetID());
     }
@@ -105,119 +111,94 @@ BSPNode* BSPTree::GenerateBSP(MapGeometry geo, int heuristic)
     std::shuffle(wallIndices.begin(), wallIndices.end(), g);
 
     // Determine crosses, front, and back for X random walls
+    int bestWallIndex = -1;
     std::vector<Linedef*> crosses;
-    std::vector<Linedef*> front;
-    std::vector<Linedef*> back;
+    std::vector<Linedef*> bestFront;
+    std::vector<Linedef*> bestBack;
+    int score = INT_MAX;
     
     int numCandidates = std::min(heuristic, (int)wallIndices.size());
     for (int i = 0; i < numCandidates; i++)
     {
+        Linedef* curr = linedefs[wallIndices[i]];
         std::vector<Linedef*> currCrosses;
         std::vector<Linedef*> currFront;
         std::vector<Linedef*> currBack;
 
-    }
-
-
-    /*// Step 1: Choose Wall
-    // Choose  random walls to test for least crossed heuristic
-
-    std::vector<int> vert_indices;
-
-    for (int i = 0; i < vertList.size(); i++)
-    {
-        vert_indices.push_back(i);
-    }
-
-    std::shuffle(vert_indices.begin(), vert_indices.end(), g);
-
-    // Determine crosses, front and back for the 5 random walls
-    std::vector<BSPVertex*> crosses[5];
-    std::vector<BSPVertex*> front[5];
-    std::vector<BSPVertex*> behind[5];
-
-    int numCandidates = std::min(5, (int)vertList.size());
-
-    for (int i = 0; i < numCandidates; i++)
-    {
-        crosses[i] = std::vector<BSPVertex*>();
-        front[i] = std::vector<BSPVertex*>();
-        behind[i] = std::vector<BSPVertex*>();
-
-        int vertIndex = vert_indices[i];
-
-        BSPVertex& vert1 = vertList[vertIndex];
-        BSPVertex& vert2 = vertList[(vertIndex + 1) % vertList.size()];
-
-        for (int j = 0; j < vertList.size(); j++)
+        for (int j = 0; j < linedefs.size(); j++)
         {
-            int crossIndex = j;
-
-            BSPVertex& cross1 = vertList[crossIndex];
-            BSPVertex& cross2 = vertList[(crossIndex + 1) % vertList.size()];
-
-            if (vert1 == cross1)
-                continue;
-
-            // Check cross
-
-            float firstHalf =
-                (vert2.getX() - vert1.getX()) *
-                (cross1.getY() - vert1.getY())
-                -
-                (cross1.getX() - vert1.getX()) *
-                (vert2.getY() - vert1.getY());
-
-            float secondHalf =
-                (vert2.getX() - vert1.getX()) *
-                (cross2.getY() - vert1.getY())
-                -
-                (cross2.getX() - vert1.getX()) *
-                (vert2.getY() - vert1.getY());
-
-            if (firstHalf * secondHalf <= 0)
+            Side result = CheckCross(curr, linedefs[j]);
+            if (result == Side::Coplanar || result == Side::Front)
             {
-                // Wall crosses
-                crosses[i].push_back(&cross1);
+                currFront.push_back(linedefs[j]);
             }
-            else if (firstHalf > 0 && secondHalf > 0)
+            else if (result == Side::Back)
             {
-                // Wall is in front
-                front[i].push_back(&cross1);
+                currBack.push_back(linedefs[j]);
             }
             else
             {
-                // Wall is behind
-                behind[i].push_back(&cross1);
+                currCrosses.push_back(linedefs[j]);
             }
         }
-    }
 
-    // Determine which wall has the least crosses and use that
-    int vertIndex = -1;
-    int numCrosses = INT_MAX;
-
-    for (int i = 0; i < 5; i++)
-    {
-        if (crosses[i].size() < numCrosses)
+        // Balance score heuristic - will try to find most balanced tree + least crosses.
+        int currScore = currCrosses.size() * 8 + abs((int)currFront.size() - (int)currBack.size());
+        if (currScore < score)
         {
-            vertIndex = i;
-            numCrosses = crosses[i].size();
+            crosses = currCrosses;
+            bestFront = currFront;
+            bestBack = currBack;
+
+            score = currScore;
+            bestWallIndex = wallIndices[i];
         }
     }
 
-    // Split and create new shapes
+    // Step 2: Build new shapes.
+    Linedef* splitter = linedefs[bestWallIndex];
 
-    // Create BSP Nodes
+    std::vector<Linedef*> finalFront;
+    std::vector<Linedef*> finalBack;
 
-    return nullptr;*/
+    for (int i = 0; i < linedefs.size(); i++)
+    {
+        Linedef* line = linedefs[i];
+
+        if (i == bestWallIndex)
+            continue;
+
+        Side result = CheckCross(splitter, line);
+
+        if (result == Side::Front || result == Side::Coplanar)
+        {
+            finalFront.push_back(line);
+        }
+        else if (result == Side::Back)
+        {
+            finalBack.push_back(line);
+        }
+        else
+        {
+            // Only spanning lines are split
+            SplitLine(line, splitter, finalFront, finalBack);
+        }
+    }
+
+    // Step 3: Build nodes and recurse.
+    BSPNode* node = new BSPNode(splitter);
+
+    node->leftNode = GenerateBSP(finalFront, heuristic);
+    node->rightNode = GenerateBSP(finalBack, heuristic);
+
+    return node;
 }
 
 
 /*
 Check cross helper function.
 */
-Side CheckCross(Linedef* line, Linedef* check)
+Side BSPTree::CheckCross(Linedef* line, Linedef* check)
 {
     if ((line->Start() == check->Start() && line->End() == check->End())
         ||
@@ -266,13 +247,109 @@ Side CheckCross(Linedef* line, Linedef* check)
 
 }
 
-void BSPTree::CreateNewShape(
-    std::vector<BSPVertex*>* shape1,
-    std::vector<BSPVertex*>* shape2,
-    std::vector<BSPVertex*> cross,
-    std::vector<BSPVertex*> front,
-    std::vector<BSPVertex*> back
-)
+BSPVertex* BSPTree::Intersect(Linedef* line, Linedef* splitter)
 {
+    float x1 = line->Start()->getX();
+    float y1 = line->Start()->getY();
+    float x2 = line->End()->getX();
+    float y2 = line->End()->getY();
 
+    float x3 = splitter->Start()->getX();
+    float y3 = splitter->Start()->getY();
+    float x4 = splitter->End()->getX();
+    float y4 = splitter->End()->getY();
+
+    float denom =
+        (x1 - x2) * (y3 - y4) -
+        (y1 - y2) * (x3 - x4);
+
+    const float EPS = 1e-6f;
+    if (fabs(denom) < EPS)
+    {
+        return nullptr; // parallel or invalid intersection
+    }
+
+    float px =
+        ((x1 * y2 - y1 * x2) * (x3 - x4) -
+            (x1 - x2) * (x3 * y4 - y3 * x4)) / denom;
+
+    float py =
+        ((x1 * y2 - y1 * x2) * (y3 - y4) -
+            (y1 - y2) * (x3 * y4 - y3 * x4)) / denom;
+
+    return new BSPVertex(nextVertexID++, px, py);
+}
+
+void BSPTree::SplitLine(
+    Linedef* line,
+    Linedef* splitter,
+    std::vector<Linedef*>& front,
+    std::vector<Linedef*>& back)
+{
+    BSPVertex* i = Intersect(line, splitter);
+    if (!i)
+        return;
+
+    BSPVertex* a = line->Start();
+    BSPVertex* b = line->End();
+
+    // Compute which side 'a' (the start vertex) is on relative to the splitter.
+    float x3 = splitter->Start()->getX();
+    float y3 = splitter->Start()->getY();
+    float x4 = splitter->End()->getX();
+    float y4 = splitter->End()->getY();
+
+    float d = (x4 - x3) * (a->getY() - y3) - (a->getX() - x3) * (y4 - y3);
+
+    // If 'a' is on the front side, the a->i fragment is front and i->b is back.
+    // If 'a' is on the back side, it's reversed.
+    const float EPS = 1e-5f;
+    if (d > EPS) 
+    {
+        front.push_back(new Linedef(nextLineID++, a, i));
+        back.push_back(new Linedef(nextLineID++, i, b));
+    }
+    else if (d < -EPS) 
+    { 
+        back.push_back(new Linedef(nextLineID++, a, i));
+        front.push_back(new Linedef(nextLineID++, i, b));
+    }
+    else {
+        // 'a' is essentially on the splitter line itself — degenerate split,
+        // just push the whole line to front to avoid a zero-length fragment.
+        front.push_back(line);
+    }
+}
+
+bool BSPTree::CompileBSPIntoFile(std::string path) {
+    std::ofstream out(path, std::ios::binary);
+
+    // Collect nodes via DFS, assign indices
+    std::vector<BSPNode*> ordered;
+    std::function<void(BSPNode*)> collect = [&](BSPNode* n) {
+        if (!n) return;
+        ordered.push_back(n);
+        collect(n->leftNode);
+        collect(n->rightNode);
+        };
+    collect(root);
+
+    // Build index map
+    std::unordered_map<BSPNode*, int32_t> indexMap;
+    for (int i = 0; i < ordered.size(); i++)
+        indexMap[ordered[i]] = i;
+
+    // Write header
+    out.write("BSP1", 4);
+    // ... write counts, then blocks
+
+    // Write nodes
+    for (auto* node : ordered) {
+        int32_t lid = node->GetLinedef()->GetID();
+        int32_t left = node->leftNode ? indexMap[node->leftNode] : -1;
+        int32_t right = node->rightNode ? indexMap[node->rightNode] : -1;
+        out.write((char*)&lid, 4);
+        out.write((char*)&left, 4);
+        out.write((char*)&right, 4);
+    }
 }

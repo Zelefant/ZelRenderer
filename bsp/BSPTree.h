@@ -7,6 +7,14 @@
 #include "BSPVertex.h"
 #include "MapGeometry.h"
 
+enum class Side
+{
+	Coplanar,
+	Front,
+	Back,
+	Spanning
+};
+
 class BSPTree
 {
 public:
@@ -19,29 +27,25 @@ private:
 	std::random_device rd;
 	std::mt19937 g;
 
+	int nextVertexID = 100000;
+	int nextLineID = 100000;
+
 	MapGeometry LoadMapGeometryFromFile(std::string file_path);
 
-	BSPNode* GenerateBSP(MapGeometry geo, int heuristic = 5);
+	BSPNode* GenerateBSP(std::vector<Linedef*>& linedefs, int heuristic = 5);
 
-	void CreateNewShape(
-		std::vector<BSPVertex*>* shape1,
-		std::vector<BSPVertex*>* shape2,
-		std::vector<BSPVertex*> cross,
-		std::vector<BSPVertex*> front,
-		std::vector<BSPVertex*> back
-	);
+	BSPVertex* Intersect(Linedef* line, Linedef* splitter);
 
-	int CheckCross(Linedef* line, Linedef* check);
+	void SplitLine(
+		Linedef* line,
+		Linedef* splitter,
+		std::vector<Linedef*>& front,
+		std::vector<Linedef*>& back);
+
+	Side CheckCross(Linedef* line, Linedef* check);
 
 	BSPNode* root;
 };
 
-enum class Side
-{
-	Coplanar,
-	Front,
-	Back,
-	Spanning
-};
 
 #endif

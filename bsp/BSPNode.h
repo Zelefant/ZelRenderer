@@ -7,12 +7,15 @@
 class BSPNode
 {
 public:
-	BSPNode(Linedef wall);
+	BSPNode(Linedef* wall);
 
-private:
-	Linedef wall;
 	BSPNode* leftNode = nullptr;
 	BSPNode* rightNode = nullptr;
+
+	Linedef* GetLinedef();
+
+private:
+	Linedef* wall;
 };
 
 
