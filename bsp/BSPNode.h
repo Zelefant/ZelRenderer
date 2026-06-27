@@ -2,15 +2,15 @@
 #define BSP_NODE_CLASS_H
 
 #include <vector>
-#include "Wall.h"
+#include "Linedef.h"
 
 class BSPNode
 {
 public:
-	BSPNode(Wall wall);
+	BSPNode(Linedef wall);
 
 private:
-	Wall wall;
+	Linedef wall;
 	BSPNode* leftNode = nullptr;
 	BSPNode* rightNode = nullptr;
 };

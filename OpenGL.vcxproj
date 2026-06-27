@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -138,7 +138,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="bsp\BSPTree.cpp" />
-    <ClCompile Include="bsp\Wall.cpp" />
+    <ClCompile Include="bsp\BSPVertex.cpp" />
+    <ClCompile Include="bsp\Linedef.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="input\InputHandler.cpp" />
     <ClCompile Include="main.cpp" />
@@ -164,7 +165,9 @@
     <ClInclude Include="bsp\BSPTree.h" />
     <ClInclude Include="bsp\BSPNode.h" />
     <ClInclude Include="bsp\BSPNode.cpp" />
-    <ClInclude Include="bsp\Wall.h" />
+    <ClInclude Include="bsp\BSPVertex.h" />
+    <ClInclude Include="bsp\Linedef.h" />
+    <ClInclude Include="bsp\Sector.h" />
     <ClInclude Include="input\InputHandler.h" />
     <ClInclude Include="render\Camera.h" />
     <ClInclude Include="render\EBO.h" />

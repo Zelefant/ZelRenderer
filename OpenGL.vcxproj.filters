@@ -19,89 +19,127 @@
     <Filter Include="Resource Files\Textures">
       <UniqueIdentifier>{2862eeda-8c62-4cbd-815b-b5c39a679d2a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\BSP">
+      <UniqueIdentifier>{7a7b5447-9a5b-49b4-8b79-07513cf2fac1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Graphics">
+      <UniqueIdentifier>{851eb128-9d45-4d5c-870e-c7f43f2aaef2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Control">
+      <UniqueIdentifier>{07db8d2b-a092-4028-a765-05129480b6b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\BSP">
+      <UniqueIdentifier>{96071ec1-ce62-4300-bdca-ef08ca6b7ddb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Graphics">
+      <UniqueIdentifier>{ed4958c9-4840-495c-af60-90ca891cdffc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Control">
+      <UniqueIdentifier>{88c97822-3da1-4a4d-ab17-06b0ceb42902}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="glad.c">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="bsp\BSPTree.cpp">
+      <Filter>Source Files\BSP</Filter>
+    </ClCompile>
+    <ClCompile Include="bsp\BSPVertex.cpp">
+      <Filter>Source Files\BSP</Filter>
+    </ClCompile>
+    <ClCompile Include="bsp\Linedef.cpp">
+      <Filter>Source Files\BSP</Filter>
+    </ClCompile>
+    <ClCompile Include="render\Camera.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="render\EBO.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="render\Mesh.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="render\Model.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="render\ShaderClass.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="stb.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="render\Texture.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="render\VAO.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="render\VBO.cpp">
+      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ShaderClass.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="input\InputHandler.cpp">
+      <Filter>Source Files\Control</Filter>
     </ClCompile>
-    <ClCompile Include="VBO.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="EBO.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="VAO.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="stb.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Model.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="InputHandler.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="glad.c">
+      <Filter>Source Files\Control</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="default.vert">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="default.frag">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="light.vert">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="light.frag">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
+    <None Include="bsp\bsp_test.map" />
+    <None Include="shaders\default.frag" />
+    <None Include="shaders\default.vert" />
+    <None Include="shaders\light.frag" />
+    <None Include="shaders\light.vert" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ShaderClass.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="bsp\BSPNode.h">
+      <Filter>Header Files\BSP</Filter>
     </ClInclude>
-    <ClInclude Include="VBO.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="bsp\BSPTree.h">
+      <Filter>Header Files\BSP</Filter>
     </ClInclude>
-    <ClInclude Include="EBO.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="bsp\BSPVertex.h">
+      <Filter>Header Files\BSP</Filter>
     </ClInclude>
-    <ClInclude Include="VAO.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="bsp\Linedef.h">
+      <Filter>Header Files\BSP</Filter>
     </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="render\Camera.h">
+      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="render\EBO.h">
+      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="LightSource.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="render\LightSource.h">
+      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="render\Mesh.h">
+      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Model.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="render\Model.h">
+      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="InputHandler.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="render\ShaderClass.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="render\Texture.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="render\VAO.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="render\VBO.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="input\InputHandler.h">
+      <Filter>Header Files\Control</Filter>
+    </ClInclude>
+    <ClInclude Include="bsp\BSPNode.cpp">
+      <Filter>Source Files\BSP</Filter>
+    </ClInclude>
+    <ClInclude Include="bsp\Sector.h">
+      <Filter>Header Files\BSP</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

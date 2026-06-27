@@ -1,7 +1,7 @@
 #include "BSPNode.h"
 
 
-BSPNode::BSPNode(Wall wall)
+BSPNode::BSPNode(Linedef wall)
 {
 	this->wall = wall;
 } 
