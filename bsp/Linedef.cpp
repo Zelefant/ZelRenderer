@@ -1,22 +1,10 @@
 #include "Linedef.h"
 
-Linedef::Linedef(glm::vec2 vert1, glm::vec2 vert2, bool visible)
-{
-	this->start = new BSPVertex(vert1);
-	this->end = new BSPVertex(vert2);
-	this->visible = visible;
-}
 
-Linedef::Linedef(bool visible)
-{
-	this->start = new BSPVertex(0.0, 0.0);
-	this->end = new BSPVertex(1.0, 0.0);
 
-	this->visible = visible;
-}
-
-Linedef::Linedef(BSPVertex* vert1, BSPVertex* vert2, bool visible)
+Linedef::Linedef(int id, BSPVertex* vert1, BSPVertex* vert2, bool visible)
 {
+	this->id = id;
 	this->start = vert1;
 	this->end = vert2;
 	this->visible = visible;

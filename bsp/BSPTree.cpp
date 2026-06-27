@@ -3,6 +3,9 @@
 #include <fstream>
 #include <algorithm>
 #include <random>
+#include <stdexcept>
+
+#include <json/json.hpp>
 
 BSPTree::BSPTree(std::string map_file_path)
 {
@@ -41,10 +44,51 @@ BSPTree::BSPTree(std::string map_file_path)
     this->root = GenerateBSP(vertexList);
 }
 
-std::vector<Linedef> LoadMapGeometryFromFile(std::string file_path)
+/*
+Loads map geometry (vertices, walls) from JSON map file.
+
+*/
+std::vector<Linedef> BSPTree::LoadMapGeometryFromFile(std::string file_path)
 {
     // Load Map File into Fstream
     std::ifstream mapfile(file_path);
+
+    // Read and parse JSON data
+    using json = nlohmann::json;
+    json mapdata = json::parse(mapfile);
+
+    // Create list of vertex pointers
+    std::vector<BSPVertex*> verticesList(mapdata["vertices"].size(), nullptr);
+    for (const auto& vertex : mapdata["vertices"])
+    {
+        int id = vertex["id"];
+        float x = vertex["x"];
+        float y = vertex["y"];
+
+        verticesList[id] = new BSPVertex(id, x, y);
+    }
+
+    // Create list of walls
+    std::vector<Linedef*> linedefs = std::vector<Linedef*>(mapdata["walls"].size(), nullptr);
+    for (const auto& line : mapdata["walls"])
+    {
+        int id = line["id"];
+        int start = line["start"];
+        int end = line["end"];
+
+        BSPVertex* vert1 = verticesList[start];
+        BSPVertex* vert2 = verticesList[end];
+
+        if (vert1 != nullptr && vert2 != nullptr)
+        {
+            linedefs[id] = new Linedef(id, verticesList[start], verticesList[end]);
+        }
+        else
+        {
+            // Throw error. The linedef references a nonexistent vertex index.
+            throw std::invalid_argument("Fatal error during compile: Line references nonexistent vertex id");
+        }
+    }
 }
 
 

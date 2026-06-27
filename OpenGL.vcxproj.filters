@@ -37,6 +37,9 @@
     <Filter Include="Source Files\Control">
       <UniqueIdentifier>{88c97822-3da1-4a4d-ab17-06b0ceb42902}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\UncompiledMaps">
+      <UniqueIdentifier>{34d01bd4-40a2-443d-9114-b520ec26a424}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="bsp\BSPTree.cpp">
@@ -84,6 +87,9 @@
     <ClCompile Include="glad.c">
       <Filter>Source Files\Control</Filter>
     </ClCompile>
+    <ClCompile Include="bsp\MapGeometry.cpp">
+      <Filter>Source Files\BSP</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="bsp\bsp_test.map" />
@@ -91,6 +97,9 @@
     <None Include="shaders\default.vert" />
     <None Include="shaders\light.frag" />
     <None Include="shaders\light.vert" />
+    <None Include="maps\decomp\bsp_test.zmap">
+      <Filter>Resource Files\UncompiledMaps</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bsp\BSPNode.h">
@@ -139,6 +148,9 @@
       <Filter>Source Files\BSP</Filter>
     </ClInclude>
     <ClInclude Include="bsp\Sector.h">
+      <Filter>Header Files\BSP</Filter>
+    </ClInclude>
+    <ClInclude Include="bsp\MapGeometry.h">
       <Filter>Header Files\BSP</Filter>
     </ClInclude>
   </ItemGroup>

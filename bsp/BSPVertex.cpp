@@ -1,20 +1,23 @@
 #include "BSPVertex.h"
 
 // Constructors
-BSPVertex::BSPVertex()
+BSPVertex::BSPVertex(int id)
 {
+	this->id = id;
 	this->x = 0.0;
 	this->y = 0.0;
 }
 
-BSPVertex::BSPVertex(float x, float y)
+BSPVertex::BSPVertex(int id, float x, float y)
 {
+	this->id = id;
 	this->x = x;
 	this->y = y;
 }
 
-BSPVertex::BSPVertex(glm::vec2 vertex)
+BSPVertex::BSPVertex(int id, glm::vec2 vertex)
 {
+	this->id = id;
 	this->x = vertex.x;
 	this->y = vertex.y;
 }
@@ -29,6 +32,11 @@ float BSPVertex::getX()
 float BSPVertex::getY()
 {
 	return this->y;
+}
+
+int BSPVertex::GetID()
+{
+	return this->id;
 }
 
 
