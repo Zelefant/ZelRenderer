@@ -141,6 +141,7 @@
     <ClCompile Include="bsp\BSPVertex.cpp" />
     <ClCompile Include="bsp\Linedef.cpp" />
     <ClCompile Include="bsp\MapGeometry.cpp" />
+    <ClCompile Include="bsp\Sector.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="input\InputHandler.cpp" />
     <ClCompile Include="main.cpp" />

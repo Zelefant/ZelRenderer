@@ -7,9 +7,10 @@
 class Sector
 {
 public:
-
+	Sector(int id, std::vector<Linedef*> walls, float floorHeight, float ceilingHeight);
 
 private:
+	int id;
 	float floorHeight;
 	float ceilingHeight;
 

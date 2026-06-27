@@ -12,43 +12,16 @@ BSPTree::BSPTree(std::string map_file_path)
     // Set up random device.
     g = std::mt19937(rd());
 
-    // Load map file and create vertex list.
-    std::ifstream map_file(map_file_path);
-    std::string xs, ys;
-
-    std::vector<BSPVertex> vertexList;
-
-    while (std::getline(map_file, xs))
-    {
-        if (!std::getline(map_file, ys))
-        {
-            std::cerr << "Error: Invalid map file\n";
-            return;
-        }
-
-        try
-        {
-            float x = std::stof(xs);
-            float y = std::stof(ys);
-
-            vertexList.push_back(BSPVertex(x, y));
-        }
-        catch (const std::invalid_argument&)
-        {
-            std::cerr << "Error: Invalid map file\n";
-            return;
-        }
-    }
-
-    // CRITICAL : DO NOT MODIFY THE VERTEX LIST AFTER THIS POINT.
-    this->root = GenerateBSP(vertexList);
+    // Load map file and create map geometry object.
+    MapGeometry geo = LoadMapGeometryFromFile(map_file_path);
+    
 }
 
 /*
 Loads map geometry (vertices, walls) from JSON map file.
 
 */
-std::vector<Linedef> BSPTree::LoadMapGeometryFromFile(std::string file_path)
+MapGeometry BSPTree::LoadMapGeometryFromFile(std::string file_path)
 {
     // Load Map File into Fstream
     std::ifstream mapfile(file_path);
@@ -58,14 +31,14 @@ std::vector<Linedef> BSPTree::LoadMapGeometryFromFile(std::string file_path)
     json mapdata = json::parse(mapfile);
 
     // Create list of vertex pointers
-    std::vector<BSPVertex*> verticesList(mapdata["vertices"].size(), nullptr);
+    std::vector<BSPVertex*> vertices(mapdata["vertices"].size(), nullptr);
     for (const auto& vertex : mapdata["vertices"])
     {
         int id = vertex["id"];
         float x = vertex["x"];
         float y = vertex["y"];
 
-        verticesList[id] = new BSPVertex(id, x, y);
+        vertices[id] = new BSPVertex(id, x, y);
     }
 
     // Create list of walls
@@ -76,12 +49,12 @@ std::vector<Linedef> BSPTree::LoadMapGeometryFromFile(std::string file_path)
         int start = line["start"];
         int end = line["end"];
 
-        BSPVertex* vert1 = verticesList[start];
-        BSPVertex* vert2 = verticesList[end];
+        BSPVertex* vert1 = vertices[start];
+        BSPVertex* vert2 = vertices[end];
 
         if (vert1 != nullptr && vert2 != nullptr)
         {
-            linedefs[id] = new Linedef(id, verticesList[start], verticesList[end]);
+            linedefs[id] = new Linedef(id, vert1, vert2);
         }
         else
         {
@@ -89,6 +62,33 @@ std::vector<Linedef> BSPTree::LoadMapGeometryFromFile(std::string file_path)
             throw std::invalid_argument("Fatal error during compile: Line references nonexistent vertex id");
         }
     }
+
+    // Create list of sectors
+    std::vector<Sector*> sectors = std::vector<Sector*>(mapdata["sectors"].size(), nullptr);
+    for (const auto& sector : mapdata["sectors"])
+    {
+        int id = sector["id"];
+        std::vector<Linedef*> walls;
+        for (int wallID : sector["walls"])
+        {
+            if (linedefs[wallID] == nullptr)
+            {
+                // Throw error. The sector has an invalid wall.
+                throw std::invalid_argument("Fatal error during compile: Sector references nonexistent linedef id");
+            }
+            walls.push_back(linedefs[wallID]);
+        }
+        float floorHeight = sector["floatHeight"];
+        float ceilingHeight = sector["ceilingHeight"];
+
+        sectors[id] = new Sector(id, walls, floorHeight, ceilingHeight);
+    }
+
+    return MapGeometry(
+        std::move(vertices),
+        std::move(linedefs),
+        std::move(sectors)
+    );
 }
 
 

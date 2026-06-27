@@ -16,6 +16,8 @@ public:
 		std::vector<Linedef*> linedefs,
 		std::vector<Sector*> sectors);
 
+	~MapGeometry();
+
 	std::vector<BSPVertex*> vertices;
 	std::vector<Linedef*> linedefs;
 	std::vector<Sector*> sectors;
