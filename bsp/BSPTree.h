@@ -16,6 +16,8 @@ private:
 	std::random_device rd;
 	std::mt19937 g;
 
+	std::vector<Linedef> LoadMapGeometryFromFile(std::string file_path);
+
 	BSPNode* GenerateBSP(std::vector<BSPVertex>& wallList);
 	void CreateNewShape(
 		std::vector<BSPVertex*>* shape1,

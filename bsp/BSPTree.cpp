@@ -41,6 +41,13 @@ BSPTree::BSPTree(std::string map_file_path)
     this->root = GenerateBSP(vertexList);
 }
 
+std::vector<Linedef> LoadMapGeometryFromFile(std::string file_path)
+{
+    // Load Map File into Fstream
+    std::ifstream mapfile(file_path);
+}
+
+
 BSPNode* BSPTree::GenerateBSP(std::vector<BSPVertex>& vertList)
 {
     // Step 1: Choose Wall
