@@ -19,6 +19,7 @@ class BSPTree
 {
 public:
 	BSPTree(std::string map_file_path);
+	~BSPTree();
 
 	bool CompileBSPIntoFile(std::string compiled_file_path);
 
@@ -29,6 +30,9 @@ private:
 
 	int nextVertexID = 100000;
 	int nextLineID = 100000;
+
+	std::vector<Linedef*> splitLinedefs;
+	std::vector<BSPVertex*> splitVertices;
 
 	MapGeometry LoadMapGeometryFromFile(std::string file_path);
 

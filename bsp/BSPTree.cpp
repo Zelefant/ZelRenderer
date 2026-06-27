@@ -277,7 +277,9 @@ BSPVertex* BSPTree::Intersect(Linedef* line, Linedef* splitter)
         ((x1 * y2 - y1 * x2) * (y3 - y4) -
             (y1 - y2) * (x3 * y4 - y3 * x4)) / denom;
 
-    return new BSPVertex(nextVertexID++, px, py);
+    BSPVertex* v = new BSPVertex(nextVertexID++, px, py);
+    splitVertices.push_back(v); // for safe memory handling
+    return v;
 }
 
 void BSPTree::SplitLine(
@@ -304,15 +306,20 @@ void BSPTree::SplitLine(
     // If 'a' is on the front side, the a->i fragment is front and i->b is back.
     // If 'a' is on the back side, it's reversed.
     const float EPS = 1e-5f;
+
+    Linedef* f = new Linedef(nextLineID++, a, i);
+    Linedef* ba = new Linedef(nextLineID++, i, b);
+    splitLinedefs.push_back(f);
+    splitLinedefs.push_back(ba);
     if (d > EPS) 
     {
-        front.push_back(new Linedef(nextLineID++, a, i));
-        back.push_back(new Linedef(nextLineID++, i, b));
+        front.push_back(f);
+        back.push_back(ba);
     }
     else if (d < -EPS) 
     { 
-        back.push_back(new Linedef(nextLineID++, a, i));
-        front.push_back(new Linedef(nextLineID++, i, b));
+        front.push_back(ba);
+        back.push_back(f);
     }
     else {
         // 'a' is essentially on the splitter line itself — degenerate split,
@@ -352,4 +359,23 @@ bool BSPTree::CompileBSPIntoFile(std::string path) {
         out.write((char*)&left, 4);
         out.write((char*)&right, 4);
     }
+}
+
+BSPTree::~BSPTree()
+{
+    // Delete the node tree recursively
+    std::function<void(BSPNode*)> deleteNodes = [&](BSPNode* node)
+        {
+            if (!node) return;
+            deleteNodes(node->leftNode);
+            deleteNodes(node->rightNode);
+            delete node;
+        };
+    deleteNodes(root);
+
+    // Delete split geometry (MapGeometry handles the originals)
+    for (Linedef* l : splitLinedefs)  delete l;
+    for (BSPVertex* v : splitVertices) delete v;
+
+    // geo destructor handles the rest automatically
 }
