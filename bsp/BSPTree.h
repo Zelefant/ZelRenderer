@@ -36,5 +36,12 @@ private:
 	BSPNode* root;
 };
 
+enum class Side
+{
+	Coplanar,
+	Front,
+	Back,
+	Spanning
+};
 
 #endif

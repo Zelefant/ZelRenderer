@@ -216,50 +216,52 @@ BSPNode* BSPTree::GenerateBSP(MapGeometry geo, int heuristic)
 
 /*
 Check cross helper function.
-
-Returns:
-If the line and check are the same line: -1
-If line passes through check: 0
-If check is in front of line: 1
-If check is behind line: 2
 */
-int CheckCross(Linedef* line, Linedef* check)
+Side CheckCross(Linedef* line, Linedef* check)
 {
-    if (line->Start() == check->Start() && line->End() == check->End())
+    if ((line->Start() == check->Start() && line->End() == check->End())
+        ||
+        (line->Start() == check->End() && line->End() == check->Start()))
     {
-        return -1;
+        return Side::Coplanar;
     }
 
-    int x1 = check->Start()->getX();
-    int y1 = check->Start()->getY();
+    // Compute dot products
+    float x1 = check->Start()->getX();
+    float y1 = check->Start()->getY();
 
-    int x2 = check->End()->getX();
-    int y2 = check->End()->getY();
+    float x2 = check->End()->getX();
+    float y2 = check->End()->getY();
 
-    int x3 = line->Start()->getX();
-    int y3 = line->Start()->getY();
+    float x3 = line->Start()->getX();
+    float y3 = line->Start()->getY();
 
-    int x4 = line->End()->getX();
-    int y4 = line->End()->getY();
+    float x4 = line->End()->getX();
+    float y4 = line->End()->getY();
 
-    float firstHalf = (x4 - x3) * (y1 - y3) - (x1 - x3) * (y4 - y3);
+    float d1 = (x4 - x3) * (y1 - y3) - (x1 - x3) * (y4 - y3);
 
-    float secondHalf = (x4 - x3) * (y2 - y3) - (x2 - x3) * (y4 - y3);
+    float d2 = (x4 - x3) * (y2 - y3) - (x2 - x3) * (y4 - y3);
 
-    if (firstHalf * secondHalf <= 0)
+    // Epsilon fix for float precision
+    const float EPS = 1e-5f;
+
+    // Perform check
+    if (fabs(d1) < EPS && fabs(d2) < EPS)
     {
-        // Wall crosses
-        return 0;
+        return Side::Coplanar;
     }
-    else if (firstHalf > 0 && secondHalf > 0)
+    else if (d1 > EPS && d2 > EPS)
     {
-        // Wall is in front
-        return 1;
+        return Side::Front;
+    }
+    else if (d1 < -EPS && d2 < -EPS)
+    {
+        return Side::Back;
     }
     else
     {
-        // Wall is behind
-        return 2;
+        return Side::Spanning;
     }
 
 }
