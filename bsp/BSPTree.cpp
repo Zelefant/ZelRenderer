@@ -92,10 +92,35 @@ MapGeometry BSPTree::LoadMapGeometryFromFile(std::string file_path)
 }
 
 
-BSPNode* BSPTree::GenerateBSP(std::vector<BSPVertex>& vertList)
+BSPNode* BSPTree::GenerateBSP(MapGeometry geo, int heuristic)
 {
     // Step 1: Choose Wall
-    // Choose 5 random walls to test for least crossed heuristic
+    // Choose X random walls to test for least crossed heuristic
+    std::vector<int> wallIndices;
+    for (const auto& wall : geo.linedefs)
+    {
+        wallIndices.push_back(wall->GetID());
+    }
+
+    std::shuffle(wallIndices.begin(), wallIndices.end(), g);
+
+    // Determine crosses, front, and back for X random walls
+    std::vector<Linedef*> crosses;
+    std::vector<Linedef*> front;
+    std::vector<Linedef*> back;
+    
+    int numCandidates = std::min(heuristic, (int)wallIndices.size());
+    for (int i = 0; i < numCandidates; i++)
+    {
+        std::vector<Linedef*> currCrosses;
+        std::vector<Linedef*> currFront;
+        std::vector<Linedef*> currBack;
+
+    }
+
+
+    /*// Step 1: Choose Wall
+    // Choose  random walls to test for least crossed heuristic
 
     std::vector<int> vert_indices;
 
@@ -185,7 +210,58 @@ BSPNode* BSPTree::GenerateBSP(std::vector<BSPVertex>& vertList)
 
     // Create BSP Nodes
 
-    return nullptr;
+    return nullptr;*/
+}
+
+
+/*
+Check cross helper function.
+
+Returns:
+If the line and check are the same line: -1
+If line passes through check: 0
+If check is in front of line: 1
+If check is behind line: 2
+*/
+int CheckCross(Linedef* line, Linedef* check)
+{
+    if (line->Start() == check->Start() && line->End() == check->End())
+    {
+        return -1;
+    }
+
+    int x1 = check->Start()->getX();
+    int y1 = check->Start()->getY();
+
+    int x2 = check->End()->getX();
+    int y2 = check->End()->getY();
+
+    int x3 = line->Start()->getX();
+    int y3 = line->Start()->getY();
+
+    int x4 = line->End()->getX();
+    int y4 = line->End()->getY();
+
+    float firstHalf = (x4 - x3) * (y1 - y3) - (x1 - x3) * (y4 - y3);
+
+    float secondHalf = (x4 - x3) * (y2 - y3) - (x2 - x3) * (y4 - y3);
+
+    if (firstHalf * secondHalf <= 0)
+    {
+        // Wall crosses
+        return 0;
+    }
+    else if (firstHalf > 0 && secondHalf > 0)
+    {
+        // Wall is in front
+        return 1;
+    }
+    else
+    {
+        // Wall is behind
+        return 2;
+    }
+
 }
 
 void BSPTree::CreateNewShape(

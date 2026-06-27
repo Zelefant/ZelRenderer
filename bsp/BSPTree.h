@@ -21,7 +21,7 @@ private:
 
 	MapGeometry LoadMapGeometryFromFile(std::string file_path);
 
-	BSPNode* GenerateBSP(std::vector<BSPVertex>& wallList);
+	BSPNode* GenerateBSP(MapGeometry geo, int heuristic = 5);
 
 	void CreateNewShape(
 		std::vector<BSPVertex*>* shape1,
@@ -30,6 +30,8 @@ private:
 		std::vector<BSPVertex*> front,
 		std::vector<BSPVertex*> back
 	);
+
+	int CheckCross(Linedef* line, Linedef* check);
 
 	BSPNode* root;
 };
