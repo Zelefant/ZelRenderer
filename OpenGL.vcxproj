@@ -142,6 +142,7 @@
     <ClCompile Include="bsp\Linedef.cpp" />
     <ClCompile Include="bsp\MapGeometry.cpp" />
     <ClCompile Include="bsp\Sector.cpp" />
+    <ClCompile Include="engine\Debug.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="input\InputHandler.cpp" />
     <ClCompile Include="main.cpp" />
@@ -171,6 +172,7 @@
     <ClInclude Include="bsp\Linedef.h" />
     <ClInclude Include="bsp\MapGeometry.h" />
     <ClInclude Include="bsp\Sector.h" />
+    <ClInclude Include="engine\Debug.h" />
     <ClInclude Include="input\InputHandler.h" />
     <ClInclude Include="render\Camera.h" />
     <ClInclude Include="render\EBO.h" />

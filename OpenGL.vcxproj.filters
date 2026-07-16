@@ -40,6 +40,12 @@
     <Filter Include="Resource Files\UncompiledMaps">
       <UniqueIdentifier>{34d01bd4-40a2-443d-9114-b520ec26a424}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Engine">
+      <UniqueIdentifier>{af8f8c61-f832-4fb1-9d3f-0070d67338e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine">
+      <UniqueIdentifier>{2aa23ad3-5262-4eb7-a2ae-66cb94ffc117}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="bsp\BSPTree.cpp">
@@ -92,6 +98,9 @@
     </ClCompile>
     <ClCompile Include="bsp\Sector.cpp">
       <Filter>Source Files\BSP</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\Debug.cpp">
+      <Filter>Source Files\Engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -155,6 +164,9 @@
     </ClInclude>
     <ClInclude Include="bsp\MapGeometry.h">
       <Filter>Header Files\BSP</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Debug.h">
+      <Filter>Header Files\Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
