@@ -168,7 +168,7 @@
     <ClInclude Include="engine\Debug.h">
       <Filter>Header Files\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="BSPRenderer.h">
+    <ClInclude Include="bsp\BSPRenderer.h">
       <Filter>Header Files\BSP</Filter>
     </ClInclude>
   </ItemGroup>
