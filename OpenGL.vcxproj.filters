@@ -168,6 +168,9 @@
     <ClInclude Include="engine\Debug.h">
       <Filter>Header Files\Engine</Filter>
     </ClInclude>
+    <ClInclude Include="BSPRenderer.h">
+      <Filter>Header Files\BSP</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="lyonel.png">

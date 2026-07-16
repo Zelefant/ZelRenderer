@@ -165,6 +165,7 @@
     <Image Include="resources\textures\planksSpec.png" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BSPRenderer.h" />
     <ClInclude Include="bsp\BSPTree.h" />
     <ClInclude Include="bsp\BSPNode.h" />
     <ClInclude Include="bsp\BSPNode.cpp" />
